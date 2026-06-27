@@ -82,7 +82,7 @@ Open the Terminal icon and type:
 
 ## UI/UX skill note
 
-The requested `nextlevelbuilder/ui-ux-pro-max-skill` GitHub repository was reachable and cloned for reference. The implementation applies its high-level guidance manually: strong visual hierarchy, responsive layouts, polished transitions, tactile micro-interactions, accessible buttons, and clear visual modes.
+The requested `nextlevelbuilder/ui-ux-pro-max-skill` workflow was installed with `npx uipro-cli init --ai codex` into `.codex/skills/ui-ux-pro-max/`. The refactor followed the installed `SKILL.md` workflow by generating a portfolio design-system recommendation, checking detailed style/UX/web/React guidance, and applying motion-driven Vista/Aero dimensional layering with visible focus states, semantic controls, responsive layouts, reduced-motion handling, and non-emoji SVG interface icons.
 
 ## Assumptions
 
