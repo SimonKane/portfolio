@@ -20,7 +20,7 @@ type Shortcut = {
   icon: IconName;
 };
 
-type IconName = "folder" | "document" | "terminal" | "info" | "contact" | "spark" | "warning";
+type IconName = "folder" | "document" | "terminal" | "info" | "contact" | "mail" | "github" | "linkedin" | "spark" | "warning";
 
 const shortcuts: Shortcut[] = [
   { id: "projects", label: "Projects", icon: "folder" },
@@ -349,7 +349,7 @@ function AboutView() {
 
 function ContactView() {
   return (
-    <div className="contentStack">
+    <div className="contentStack folderSurface">
       <div>
         <p className="eyebrow">Contact shortcuts</p>
         <h2>Contact</h2>
@@ -357,13 +357,26 @@ function ContactView() {
       <div className="contactList">
         {portfolio.contact.map((link) => (
           <a key={link.label} href={link.href}>
-            <strong>{link.label}</strong>
-            <span>{link.value}</span>
+            <span className="contactIcon" aria-hidden="true">
+              <Icon name={getContactIcon(link.label)} />
+            </span>
+            <span className="contactMeta">
+              <strong>{link.label}</strong>
+              <span>{link.value}</span>
+            </span>
           </a>
         ))}
       </div>
     </div>
   );
+}
+
+function getContactIcon(label: string): IconName {
+  const normalized = label.toLowerCase();
+  if (normalized.includes("github")) return "github";
+  if (normalized.includes("linkedin")) return "linkedin";
+  if (normalized.includes("mail") || normalized.includes("email")) return "mail";
+  return "contact";
 }
 
 function Terminal({ onOpen, onTheme }: { onOpen: (id: WindowId) => void; onTheme: (mode: ThemeMode) => void }) {
@@ -608,6 +621,25 @@ function Icon({ name }: { name: IconName }) {
         <path fill="#f7fbff" d="M3.5 6h17v12h-17V6Z" />
         <path fill="#7fb6ea" d="m4.7 7.2 7.3 5.2 7.3-5.2H4.7Z" />
         <path fill="#2b5fc2" d="M3.5 6h17v12h-17V6Zm1.5 2.2v8.3h14V8.2l-7 5-7-5Z" />
+      </>
+    ),
+    mail: (
+      <>
+        <path fill="#ffffff" d="M2.8 6.2h18.4v12.5H2.8V6.2Z" />
+        <path fill="#dbeafe" d="M4.1 7.6 12 13.2l7.9-5.6v9.8H4.1V7.6Z" />
+        <path fill="#2563eb" d="M2.8 6.2h18.4v12.5H2.8V6.2Zm2.2 2 7 5 7-5H5Zm14.7 1.5-7.7 5.5-7.7-5.5v7.4h15.4V9.7Z" />
+      </>
+    ),
+    github: (
+      <>
+        <circle cx="12" cy="12" r="9.5" fill="#111827" />
+        <path fill="#ffffff" d="M12 5.3a6.9 6.9 0 0 0-2.2 13.4c.35.06.48-.15.48-.34v-1.26c-1.96.43-2.38-.84-2.38-.84-.32-.82-.78-1.04-.78-1.04-.64-.44.05-.43.05-.43.7.05 1.08.73 1.08.73.63 1.08 1.65.77 2.05.59.06-.46.25-.77.45-.95-1.56-.18-3.2-.78-3.2-3.48 0-.77.27-1.4.72-1.9-.07-.18-.31-.9.07-1.87 0 0 .59-.19 1.93.72A6.7 6.7 0 0 1 12 8.4c.6 0 1.19.08 1.75.24 1.34-.91 1.93-.72 1.93-.72.38.97.14 1.69.07 1.87.45.5.72 1.13.72 1.9 0 2.7-1.64 3.3-3.21 3.47.25.22.48.66.48 1.34v1.86c0 .19.13.4.49.34A6.9 6.9 0 0 0 12 5.3Z" />
+      </>
+    ),
+    linkedin: (
+      <>
+        <path fill="#0a66c2" d="M4.2 3.8h15.6a.9.9 0 0 1 .9.9v15.6a.9.9 0 0 1-.9.9H4.2a.9.9 0 0 1-.9-.9V4.7a.9.9 0 0 1 .9-.9Z" />
+        <path fill="#ffffff" d="M7 10.2h2.4v7.4H7v-7.4Zm1.2-3.7a1.38 1.38 0 1 1 0 2.76 1.38 1.38 0 0 1 0-2.76Zm3.2 3.7h2.3v1h.03c.32-.6 1.1-1.23 2.27-1.23 2.43 0 2.88 1.6 2.88 3.68v3.95h-2.4v-3.5c0-.84-.02-1.92-1.17-1.92-1.17 0-1.35.91-1.35 1.86v3.56h-2.4v-7.4Z" />
       </>
     ),
     spark: (
