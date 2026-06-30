@@ -87,13 +87,13 @@ export function PortfolioApp() {
   const switchTheme = (next: ThemeMode) => {
     setTransition(
       next === "3d"
-        ? "Aero shell is unfolding into dimensional portfolio mode"
+        ? "Classic desktop is extruding into dimensional portfolio mode"
         : next === "ugly"
           ? "Taste filter disabled. Brace for impact."
-          : "Restoring Vista glass desktop"
+          : "Restoring classic Windows desktop"
     );
     setTheme(next);
-    window.setTimeout(() => setTransition(""), 1400);
+    window.setTimeout(() => setTransition(""), 2800);
   };
 
   return (
@@ -145,9 +145,9 @@ function RetroDesktop({
   onTheme: (mode: ThemeMode) => void;
 }) {
   return (
-    <main className="aeroDesktop" aria-label="Vista-inspired portfolio desktop">
+    <main className="aeroDesktop" aria-label="Oldschool Windows-inspired portfolio desktop">
       <section className="desktopHero" aria-label="Portfolio introduction">
-        <p className="eyebrow">SimonOS Vista Portfolio</p>
+        <p className="eyebrow">SimonOS Classic Portfolio</p>
         <h1>{portfolio.name}</h1>
         <p>{portfolio.title}</p>
       </section>
@@ -460,7 +460,7 @@ function Taskbar({
             <Icon name="warning" />
             uglify
           </button>
-          <button onClick={() => onTheme("retro")}>Vista desktop</button>
+          <button onClick={() => onTheme("retro")}>Classic desktop</button>
         </nav>
       )}
       <div className="taskButtons" aria-label="Open windows">
@@ -481,7 +481,7 @@ function ThreeDPortfolio({ onTheme }: { onTheme: (mode: ThemeMode) => void }) {
       <nav className="modernNav">
         <strong>{portfolio.name}</strong>
         <span>
-          <button onClick={() => onTheme("retro")}>Vista desktop</button>
+          <button onClick={() => onTheme("retro")}>Classic desktop</button>
           <button onClick={() => onTheme("ugly")}>Uglify</button>
         </span>
       </nav>
@@ -546,30 +546,87 @@ function UglyPortfolio({ onTheme }: { onTheme: (mode: ThemeMode) => void }) {
 }
 
 function TransitionOverlay({ label, mode }: { label: string; mode: ThemeMode }) {
+  const steps = mode === "3d" ? ["defragmenting desktop", "extruding project cards", "lighting glass layers"] : [];
+
   return (
     <div className={`transitionOverlay transition-${mode}`} role="status" aria-live="polite">
+      <div className="transitionTunnel" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
       <div className="transitionCard">
         <span className="transitionRing" aria-hidden="true" />
         <strong>{label}</strong>
+        {steps.length > 0 && (
+          <ol className="transitionSteps">
+            {steps.map((step) => (
+              <li key={step}>{step}</li>
+            ))}
+          </ol>
+        )}
       </div>
     </div>
   );
 }
 
 function Icon({ name }: { name: IconName }) {
-  const paths: Record<IconName, React.ReactNode> = {
-    folder: <path d="M3 7.5h6l1.6 2H21v8.8A1.7 1.7 0 0 1 19.3 20H4.7A1.7 1.7 0 0 1 3 18.3V7.5Zm0-2A1.5 1.5 0 0 1 4.5 4H9l1.6 2H21v2H3V5.5Z" />,
-    document: <path d="M6 3h8l4 4v14H6V3Zm8 1.8V8h3.2L14 4.8ZM8 11h8v1.6H8V11Zm0 3.2h8v1.6H8v-1.6Zm0 3.2h5v1.6H8v-1.6Z" />,
-    terminal: <path d="M3 5h18v14H3V5Zm2 2v10h14V7H5Zm2 2.2 3 2.8-3 2.8-1.1-1.2 1.7-1.6-1.7-1.6L7 9.2Zm4.2 5.2H16V16h-4.8v-1.6Z" />,
-    info: <path d="M11 10h2v8h-2v-8Zm0-4h2v2h-2V6Zm1 16a10 10 0 1 1 0-20 10 10 0 0 1 0 20Zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" />,
-    contact: <path d="M4 5h16v14H4V5Zm2 3.2V17h12V8.2l-6 4.3-6-4.3Zm1.4-1.2 4.6 3.3L16.6 7H7.4Z" />,
-    spark: <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Zm6 11 1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3Z" />,
-    warning: <path d="M12 3 2 20h20L12 3Zm0 4 6.5 11h-13L12 7Zm-1 4h2v4h-2v-4Zm0 5h2v2h-2v-2Z" />
+  const icons: Record<IconName, React.ReactNode> = {
+    folder: (
+      <>
+        <path fill="#c98d12" d="M2.8 7.4h7.1l1.4 1.8h9.9v1.9H2.8V7.4Z" />
+        <path fill="#ffd45a" d="M3.4 9.4h17.2l-1.4 10.2H4.8L3.4 9.4Z" />
+        <path fill="#ffec9a" d="M4.4 10.3h15.1l-.3 1.8H4.7l-.3-1.8Z" />
+        <path fill="#8f6208" d="M4.8 19.6h14.4l1.4-10.2h-1.7l-1 8.4H5.8L4.7 9.4H3.4l1.4 10.2Z" opacity=".55" />
+      </>
+    ),
+    document: (
+      <>
+        <path fill="#f7fbff" d="M5.2 2.8h9.1l4.5 4.5v13.9H5.2V2.8Z" />
+        <path fill="#d7e7ff" d="M14.3 2.8v4.5h4.5l-4.5-4.5Z" />
+        <path fill="#2b5fc2" d="M7.4 10.4h8.8v1.3H7.4v-1.3Zm0 3h8.8v1.3H7.4v-1.3Zm0 3h6.2v1.3H7.4v-1.3Z" />
+        <path fill="#9db8df" d="M5.2 2.8h9.1l4.5 4.5v13.9H5.2V2.8Zm1.4 1.4v15.6h10.8V8.2h-4.1v-4H6.6Z" />
+      </>
+    ),
+    terminal: (
+      <>
+        <path fill="#1d2733" d="M2.8 4.4h18.4v15.2H2.8V4.4Z" />
+        <path fill="#f4f4f4" d="M4.3 6.1h15.4v11.8H4.3V6.1Z" />
+        <path fill="#07111f" d="M5.4 7.2h13.2v9.6H5.4V7.2Z" />
+        <path fill="#2cff72" d="m7.1 9.3 3 2.7-3 2.7-1-1.1 1.8-1.6-1.8-1.6 1-1.1Zm4.2 4.4h4.9v1.2h-4.9v-1.2Z" />
+      </>
+    ),
+    info: (
+      <>
+        <circle cx="12" cy="12" r="9.3" fill="#2f7de1" />
+        <circle cx="12" cy="12" r="7.4" fill="#69b8ff" />
+        <path fill="#fff" d="M10.9 10.2h2.2v7.1h-2.2v-7.1Zm0-3.5h2.2v2.1h-2.2V6.7Z" />
+      </>
+    ),
+    contact: (
+      <>
+        <path fill="#f7fbff" d="M3.5 6h17v12h-17V6Z" />
+        <path fill="#7fb6ea" d="m4.7 7.2 7.3 5.2 7.3-5.2H4.7Z" />
+        <path fill="#2b5fc2" d="M3.5 6h17v12h-17V6Zm1.5 2.2v8.3h14V8.2l-7 5-7-5Z" />
+      </>
+    ),
+    spark: (
+      <>
+        <path fill="#f7fbff" d="M12 2.5 14 9l6.5 2-6.5 2-2 6.5-2-6.5-6.5-2L10 9l2-6.5Z" />
+        <path fill="#69e6ff" d="M12 6.4 13.1 10l3.5 1-3.5 1.1L12 15.6 10.9 12l-3.5-1 3.5-1L12 6.4Z" />
+      </>
+    ),
+    warning: (
+      <>
+        <path fill="#f7c948" d="M12 3 22 20H2L12 3Z" />
+        <path fill="#7c3b00" d="M12 6.5 18.7 18H5.3L12 6.5Zm-1 4.2v4.2h2v-4.2h-2Zm0 5.3v1.6h2V16h-2Z" />
+      </>
+    )
   };
 
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      {paths[name]}
+    <svg className={`uiIcon icon-${name}`} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      {icons[name]}
     </svg>
   );
 }
