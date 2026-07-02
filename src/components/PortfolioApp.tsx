@@ -120,12 +120,16 @@ export function PortfolioApp() {
   };
 
   const switchTheme = (next: ThemeMode) => {
+    if (next === "ugly") {
+      setTransition("");
+      setTheme(next);
+      return;
+    }
+
     setTransition(
       next === "3d"
         ? "Classic desktop is extruding into dimensional portfolio mode"
-        : next === "ugly"
-          ? "Taste filter disabled. Brace for impact."
-          : "Restoring classic Windows desktop",
+        : "Restoring classic Windows desktop",
     );
     setTheme(next);
     window.setTimeout(() => setTransition(""), 2800);
@@ -311,7 +315,10 @@ function AeroWindow({
       Math.max(0, Math.min(nextX, window.innerWidth - bounds.width)),
       Math.max(
         0,
-        Math.min(nextY, window.innerHeight - WINDOW_BOTTOM_SAFE_AREA - bounds.height),
+        Math.min(
+          nextY,
+          window.innerHeight - WINDOW_BOTTOM_SAFE_AREA - bounds.height,
+        ),
       ),
     );
   };
@@ -452,16 +459,86 @@ function FolderView({
 }
 
 function CVView() {
+  const [selectedCv, setSelectedCv] = useState<
+    (typeof portfolio.cvFiles)[number] | null
+  >(null);
+  const [viewingCv, setViewingCv] = useState<
+    (typeof portfolio.cvFiles)[number] | null
+  >(null);
+
+  if (viewingCv) {
+    return (
+      <div className="cvViewerSurface">
+        <header className="cvViewerHeader">
+          <button className="classicButton" onClick={() => setViewingCv(null)}>
+            Back
+          </button>
+          <strong>{viewingCv.label}</strong>
+          <a
+            className="classicButton"
+            href={viewingCv.href}
+            download={viewingCv.fileName}
+          >
+            Download
+          </a>
+        </header>
+        <iframe
+          className="cvFrame"
+          src={viewingCv.href}
+          title={viewingCv.label}
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="fileIconGrid" aria-label="CV files">
-      <button className="fileIcon">
-        <Icon name="document" />
-        <span>{portfolio.cv.fileName}</span>
-      </button>
-      <button className="fileIcon">
-        <Icon name="document" />
-        <span>replace-cv-readme.txt</span>
-      </button>
+    <div className="cvFileSurface">
+      <div className="fileIconGrid" aria-label="CV files">
+        {portfolio.cvFiles.map((cv) => (
+          <button
+            className="fileIcon"
+            key={cv.href}
+            onClick={() => setSelectedCv(cv)}
+            title={`${cv.label} - ${cv.fileName}`}
+          >
+            <Icon name="document" />
+            <span>{cv.label}</span>
+          </button>
+        ))}
+      </div>
+      {selectedCv && (
+        <div
+          className="cvActionDialog"
+          role="dialog"
+          aria-label={`${selectedCv.label} actions`}
+        >
+          <header>
+            <strong>{selectedCv.label}</strong>
+            <button
+              onClick={() => setSelectedCv(null)}
+              aria-label="Close CV actions"
+            >
+              <span aria-hidden="true">x</span>
+            </button>
+          </header>
+          <p>{selectedCv.fileName}</p>
+          <div>
+            <a
+              className="classicButton"
+              href={selectedCv.href}
+              download={selectedCv.fileName}
+            >
+              Download
+            </a>
+            <button
+              className="classicButton"
+              onClick={() => setViewingCv(selectedCv)}
+            >
+              View here
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -473,11 +550,14 @@ function AboutView() {
     return (
       <div className="fileIconGrid" aria-label="About files">
         <button className="fileIcon" onClick={() => setOpenFile("about")}>
-          <Icon name="document" />
+          <FileImageIcon src="/about-icon.png" alt="" />
           <span>About.txt</span>
         </button>
         <button className="fileIcon" onClick={() => setOpenFile("skills")}>
-          <Icon name="document" />
+          <FileImageIcon
+            src="https://static.vecteezy.com/system/resources/thumbnails/010/332/153/small_2x/code-flat-color-outline-icon-free-png.png"
+            alt=""
+          />
           <span>Skills.ini</span>
         </button>
       </div>
@@ -503,14 +583,19 @@ function AboutView() {
             <h3>{category.name}</h3>
             <div className="skillsGrid">
               {category.items.map((skill) => (
-                <div className="skillTile" key={`${category.name}-${skill.name}`}>
+                <div
+                  className="skillTile"
+                  key={`${category.name}-${skill.name}`}
+                >
                   <span className="skillIcon" aria-hidden="true">
                     <TechIcon label={skill.name} fallback={skill.icon} />
                   </span>
                   <span className="skillName">{skill.name}</span>
                   {typeof skill.progress === "number" && (
                     <span className="skillProgressWrap">
-                      <span className="skillProgressText">Progress {skill.progress}%</span>
+                      <span className="skillProgressText">
+                        Progress {skill.progress}%
+                      </span>
                       <span
                         className="skillProgress"
                         aria-label={`${skill.name} progress ${skill.progress}%`}
@@ -526,6 +611,13 @@ function AboutView() {
         ))}
       </div>
     </div>
+  );
+}
+
+function FileImageIcon({ src, alt }: { src: string; alt: string }) {
+  // eslint-disable-next-line @next/next/no-img-element
+  return (
+    <img className="fileIconImage" src={src} alt={alt} draggable="false" />
   );
 }
 
@@ -545,8 +637,14 @@ function TechIcon({ label, fallback }: { label: string; fallback: string }) {
   if (key.includes("python")) {
     return (
       <svg className="techIconSvg" viewBox="0 0 48 48" aria-hidden="true">
-        <path fill="#3776ab" d="M12 10h17a7 7 0 0 1 7 7v6H20a6 6 0 0 0-6 6v3H8V17a7 7 0 0 1 4-7Z" />
-        <path fill="#ffd43b" d="M36 38H19a7 7 0 0 1-7-7v-6h16a6 6 0 0 0 6-6v-3h6v15a7 7 0 0 1-4 7Z" />
+        <path
+          fill="#3776ab"
+          d="M12 10h17a7 7 0 0 1 7 7v6H20a6 6 0 0 0-6 6v3H8V17a7 7 0 0 1 4-7Z"
+        />
+        <path
+          fill="#ffd43b"
+          d="M36 38H19a7 7 0 0 1-7-7v-6h16a6 6 0 0 0 6-6v-3h6v15a7 7 0 0 1-4 7Z"
+        />
         <circle cx="17" cy="16" r="2" fill="#fff" />
         <circle cx="31" cy="32" r="2" fill="#111" />
       </svg>
@@ -557,9 +655,35 @@ function TechIcon({ label, fallback }: { label: string; fallback: string }) {
     return (
       <svg className="techIconSvg" viewBox="0 0 48 48" aria-hidden="true">
         <circle cx="24" cy="24" r="4" fill="#61dafb" />
-        <ellipse cx="24" cy="24" rx="18" ry="7" fill="none" stroke="#61dafb" strokeWidth="2.4" />
-        <ellipse cx="24" cy="24" rx="18" ry="7" fill="none" stroke="#61dafb" strokeWidth="2.4" transform="rotate(60 24 24)" />
-        <ellipse cx="24" cy="24" rx="18" ry="7" fill="none" stroke="#61dafb" strokeWidth="2.4" transform="rotate(120 24 24)" />
+        <ellipse
+          cx="24"
+          cy="24"
+          rx="18"
+          ry="7"
+          fill="none"
+          stroke="#61dafb"
+          strokeWidth="2.4"
+        />
+        <ellipse
+          cx="24"
+          cy="24"
+          rx="18"
+          ry="7"
+          fill="none"
+          stroke="#61dafb"
+          strokeWidth="2.4"
+          transform="rotate(60 24 24)"
+        />
+        <ellipse
+          cx="24"
+          cy="24"
+          rx="18"
+          ry="7"
+          fill="none"
+          stroke="#61dafb"
+          strokeWidth="2.4"
+          transform="rotate(120 24 24)"
+        />
       </svg>
     );
   }
@@ -576,7 +700,10 @@ function TechIcon({ label, fallback }: { label: string; fallback: string }) {
   if (key.includes("tailwind")) {
     return (
       <svg className="techIconSvg" viewBox="0 0 48 48" aria-hidden="true">
-        <path fill="#38bdf8" d="M13 22c3-8 8-12 15-12 4 0 7 2 10 6-3-2-6-2-9 0-2 1-3 4-5 5-3 3-7 3-11 1Zm-3 12c3-8 8-12 15-12 4 0 7 2 10 6-3-2-6-2-9 0-2 1-3 4-5 5-3 3-7 3-11 1Z" />
+        <path
+          fill="#38bdf8"
+          d="M13 22c3-8 8-12 15-12 4 0 7 2 10 6-3-2-6-2-9 0-2 1-3 4-5 5-3 3-7 3-11 1Zm-3 12c3-8 8-12 15-12 4 0 7 2 10 6-3-2-6-2-9 0-2 1-3 4-5 5-3 3-7 3-11 1Z"
+        />
       </svg>
     );
   }
@@ -586,7 +713,10 @@ function TechIcon({ label, fallback }: { label: string; fallback: string }) {
   if (key.includes("mongodb")) {
     return (
       <svg className="techIconSvg" viewBox="0 0 48 48" aria-hidden="true">
-        <path fill="#47a248" d="M25 4c10 8 12 18 1 32l-2 8-2-8C12 23 15 12 25 4Z" />
+        <path
+          fill="#47a248"
+          d="M25 4c10 8 12 18 1 32l-2 8-2-8C12 23 15 12 25 4Z"
+        />
         <path fill="none" stroke="#0f3d1f" strokeWidth="2" d="M24 11v25" />
       </svg>
     );
@@ -597,23 +727,29 @@ function TechIcon({ label, fallback }: { label: string; fallback: string }) {
   if (key.includes("playwright")) return textIcon("PW", "#2ead33");
   if (key.includes("cypress")) return textIcon("Cy", "#17202c");
   if (key.includes("vitest")) return textIcon("Vi", "#6e9f18");
-  if (key.includes("openai") || key.includes("llm") || key.includes("ai ")) return nodeIcon("#111827");
+  if (key.includes("openai") || key.includes("llm") || key.includes("ai "))
+    return nodeIcon("#111827");
   if (key.includes("aws")) return cloudIcon("AWS", "#ff9900");
   if (key.includes("docker")) return dockerIcon();
   if (key === "git") return branchIcon("#f05032");
   if (key.includes("github actions")) return branchIcon("#2088ff");
   if (key.includes("github")) return githubMark();
-  if (key.includes("cybersecurity") || key.includes("authentication")) return shieldIcon();
+  if (key.includes("cybersecurity") || key.includes("authentication"))
+    return shieldIcon();
   if (key.includes("websocket")) return nodeIcon("#2563eb");
   if (key.includes("file upload")) return arrowIcon("UP");
   if (key.includes("error")) return textIcon("ERR", "#b91c1c");
   if (key.includes("environment")) return textIcon("ENV", "#047857");
   if (key.includes("review")) return textIcon("CR", "#4f46e5");
   if (key.includes("test-driven")) return textIcon("TDD", "#0f766e");
-  if (key.includes("ci/cd") || key.includes("continuous")) return branchIcon("#0891b2");
-  if (key.includes("scrum") || key.includes("agile") || key.includes("kanban")) return textIcon(fallback, "#7c3aed");
-  if (key.includes("api") || key.includes("rest") || key.includes("routing")) return apiIcon(fallback);
-  if (key.includes("crud") || key.includes("middleware")) return textIcon(fallback, "#0f766e");
+  if (key.includes("ci/cd") || key.includes("continuous"))
+    return branchIcon("#0891b2");
+  if (key.includes("scrum") || key.includes("agile") || key.includes("kanban"))
+    return textIcon(fallback, "#7c3aed");
+  if (key.includes("api") || key.includes("rest") || key.includes("routing"))
+    return apiIcon(fallback);
+  if (key.includes("crud") || key.includes("middleware"))
+    return textIcon(fallback, "#0f766e");
 
   return textIcon(fallback);
 }
@@ -622,9 +758,15 @@ function databaseIcon(label: string, color: string) {
   return (
     <svg className="techIconSvg" viewBox="0 0 48 48" aria-hidden="true">
       <ellipse cx="24" cy="12" rx="15" ry="7" fill={color} />
-      <path fill={color} d="M9 12h30v22c0 4-7 8-15 8S9 38 9 34V12Z" opacity=".86" />
+      <path
+        fill={color}
+        d="M9 12h30v22c0 4-7 8-15 8S9 38 9 34V12Z"
+        opacity=".86"
+      />
       <ellipse cx="24" cy="34" rx="15" ry="7" fill={color} />
-      <text x="24" y="29" textAnchor="middle">{label}</text>
+      <text x="24" y="29" textAnchor="middle">
+        {label}
+      </text>
     </svg>
   );
 }
@@ -635,7 +777,11 @@ function nodeIcon(color: string) {
       <circle cx="14" cy="16" r="5" fill={color} />
       <circle cx="34" cy="16" r="5" fill={color} />
       <circle cx="24" cy="34" r="5" fill={color} />
-      <path d="M18 18l12 0M17 20l5 10M31 20l-5 10" stroke={color} strokeWidth="3" />
+      <path
+        d="M18 18l12 0M17 20l5 10M31 20l-5 10"
+        stroke={color}
+        strokeWidth="3"
+      />
     </svg>
   );
 }
@@ -643,8 +789,13 @@ function nodeIcon(color: string) {
 function cloudIcon(label: string, color: string) {
   return (
     <svg className="techIconSvg" viewBox="0 0 48 48" aria-hidden="true">
-      <path fill={color} d="M16 35h20a8 8 0 0 0 0-16 12 12 0 0 0-23-3 10 10 0 0 0 3 19Z" />
-      <text x="24" y="31" textAnchor="middle">{label}</text>
+      <path
+        fill={color}
+        d="M16 35h20a8 8 0 0 0 0-16 12 12 0 0 0-23-3 10 10 0 0 0 3 19Z"
+      />
+      <text x="24" y="31" textAnchor="middle">
+        {label}
+      </text>
     </svg>
   );
 }
@@ -653,7 +804,10 @@ function dockerIcon() {
   return (
     <svg className="techIconSvg" viewBox="0 0 48 48" aria-hidden="true">
       <path fill="#2496ed" d="M8 25h32c-2 10-8 15-18 15-8 0-13-4-14-15Z" />
-      <path fill="#2496ed" d="M12 13h6v6h-6v-6Zm7 0h6v6h-6v-6Zm7 0h6v6h-6v-6ZM19 20h6v5h-6v-5Zm7 0h6v5h-6v-5Zm7 0h6v5h-6v-5Z" />
+      <path
+        fill="#2496ed"
+        d="M12 13h6v6h-6v-6Zm7 0h6v6h-6v-6Zm7 0h6v6h-6v-6ZM19 20h6v5h-6v-5Zm7 0h6v5h-6v-5Zm7 0h6v5h-6v-5Z"
+      />
     </svg>
   );
 }
@@ -661,7 +815,13 @@ function dockerIcon() {
 function branchIcon(color: string) {
   return (
     <svg className="techIconSvg" viewBox="0 0 48 48" aria-hidden="true">
-      <path d="M16 13v22M16 25h14a7 7 0 0 0 7-7v-3" fill="none" stroke={color} strokeWidth="4" strokeLinecap="round" />
+      <path
+        d="M16 13v22M16 25h14a7 7 0 0 0 7-7v-3"
+        fill="none"
+        stroke={color}
+        strokeWidth="4"
+        strokeLinecap="round"
+      />
       <circle cx="16" cy="12" r="6" fill={color} />
       <circle cx="16" cy="36" r="6" fill={color} />
       <circle cx="37" cy="12" r="6" fill={color} />
@@ -673,7 +833,10 @@ function githubMark() {
   return (
     <svg className="techIconSvg" viewBox="0 0 48 48" aria-hidden="true">
       <circle cx="24" cy="24" r="20" fill="#111827" />
-      <path fill="#fff" d="M24 10a14 14 0 0 0-4 27c1 .2 1.4-.4 1.4-1v-3.3c-5.2 1.1-6.3-2.2-6.3-2.2-.8-2-2-2.6-2-2.6-1.7-1.1.1-1.1.1-1.1 1.9.1 2.9 1.9 2.9 1.9 1.7 2.9 4.4 2.1 5.4 1.6.2-1.2.7-2.1 1.2-2.5-4.1-.5-8.5-2.1-8.5-9.2 0-2 .7-3.7 1.9-5-.2-.5-.8-2.4.2-4.9 0 0 1.6-.5 5.1 1.9a18 18 0 0 1 9.2 0c3.5-2.4 5.1-1.9 5.1-1.9 1 2.5.4 4.4.2 4.9 1.2 1.3 1.9 3 1.9 5 0 7.1-4.4 8.7-8.5 9.2.7.6 1.3 1.8 1.3 3.6V36c0 .6.4 1.2 1.4 1A14 14 0 0 0 24 10Z" />
+      <path
+        fill="#fff"
+        d="M24 10a14 14 0 0 0-4 27c1 .2 1.4-.4 1.4-1v-3.3c-5.2 1.1-6.3-2.2-6.3-2.2-.8-2-2-2.6-2-2.6-1.7-1.1.1-1.1.1-1.1 1.9.1 2.9 1.9 2.9 1.9 1.7 2.9 4.4 2.1 5.4 1.6.2-1.2.7-2.1 1.2-2.5-4.1-.5-8.5-2.1-8.5-9.2 0-2 .7-3.7 1.9-5-.2-.5-.8-2.4.2-4.9 0 0 1.6-.5 5.1 1.9a18 18 0 0 1 9.2 0c3.5-2.4 5.1-1.9 5.1-1.9 1 2.5.4 4.4.2 4.9 1.2 1.3 1.9 3 1.9 5 0 7.1-4.4 8.7-8.5 9.2.7.6 1.3 1.8 1.3 3.6V36c0 .6.4 1.2 1.4 1A14 14 0 0 0 24 10Z"
+      />
     </svg>
   );
 }
@@ -681,7 +844,10 @@ function githubMark() {
 function shieldIcon() {
   return (
     <svg className="techIconSvg" viewBox="0 0 48 48" aria-hidden="true">
-      <path fill="#0f766e" d="M24 5 39 11v10c0 10-6 18-15 22C15 39 9 31 9 21V11l15-6Z" />
+      <path
+        fill="#0f766e"
+        d="M24 5 39 11v10c0 10-6 18-15 22C15 39 9 31 9 21V11l15-6Z"
+      />
       <path fill="#fff" d="m21 29-6-6 3-3 3 3 9-10 3 3-12 13Z" />
     </svg>
   );
@@ -691,7 +857,9 @@ function arrowIcon(label: string) {
   return (
     <svg className="techIconSvg" viewBox="0 0 48 48" aria-hidden="true">
       <path fill="#2563eb" d="M12 39h24v-8h6L24 9 6 31h6v8Z" />
-      <text x="24" y="34" textAnchor="middle">{label}</text>
+      <text x="24" y="34" textAnchor="middle">
+        {label}
+      </text>
     </svg>
   );
 }
@@ -699,8 +867,16 @@ function arrowIcon(label: string) {
 function apiIcon(label: string) {
   return (
     <svg className="techIconSvg" viewBox="0 0 48 48" aria-hidden="true">
-      <path fill="none" stroke="#2563eb" strokeWidth="4" strokeLinecap="round" d="m17 15-9 9 9 9m14-18 9 9-9 9" />
-      <text x="24" y="29" textAnchor="middle">{label}</text>
+      <path
+        fill="none"
+        stroke="#2563eb"
+        strokeWidth="4"
+        strokeLinecap="round"
+        d="m17 15-9 9 9 9m14-18 9 9-9 9"
+      />
+      <text x="24" y="29" textAnchor="middle">
+        {label}
+      </text>
     </svg>
   );
 }
@@ -766,6 +942,9 @@ function Terminal({
   onOpen: (id: WindowId) => void;
   onTheme: (mode: ThemeMode) => void;
 }) {
+  const typeTimerRef = useRef<number | null>(null);
+  const themeDelayTimerRef = useRef<number | null>(null);
+  const [awaitingUglifyConfirm, setAwaitingUglifyConfirm] = useState(false);
   const [lines, setLines] = useState<string[]>([
     "SimonOS Aero Terminal v2.0",
     "Type 'help' for commands.",
@@ -779,17 +958,90 @@ function Terminal({
     [input],
   );
 
+  useEffect(() => {
+    return () => {
+      if (typeTimerRef.current !== null) {
+        window.clearTimeout(typeTimerRef.current);
+      }
+      if (themeDelayTimerRef.current !== null) {
+        window.clearTimeout(themeDelayTimerRef.current);
+      }
+    };
+  }, []);
+
+  const typeLine = (text: string, onComplete?: () => void) => {
+    if (typeTimerRef.current !== null) {
+      window.clearTimeout(typeTimerRef.current);
+    }
+
+    setLines((current) => [...current, ""]);
+
+    const typeNextCharacter = (position: number) => {
+      setLines((current) =>
+        current.map((line, index) =>
+          index === current.length - 1 ? text.slice(0, position) : line,
+        ),
+      );
+
+      if (position < text.length) {
+        typeTimerRef.current = window.setTimeout(
+          () => typeNextCharacter(position + 1),
+          34,
+        );
+        return;
+      }
+
+      typeTimerRef.current = null;
+      onComplete?.();
+    };
+
+    typeNextCharacter(1);
+  };
+
   const run = (event: FormEvent) => {
     event.preventDefault();
     const command = input.trim().toLowerCase();
     setInput("");
 
     if (command === "clear") {
+      if (typeTimerRef.current !== null) {
+        window.clearTimeout(typeTimerRef.current);
+        typeTimerRef.current = null;
+      }
+      if (themeDelayTimerRef.current !== null) {
+        window.clearTimeout(themeDelayTimerRef.current);
+        themeDelayTimerRef.current = null;
+      }
+      setAwaitingUglifyConfirm(false);
       setLines([]);
       return;
     }
 
     const output: string[] = [`C:\\PORTFOLIO> ${command}`];
+
+    if (awaitingUglifyConfirm) {
+      setLines((current) => [...current, ...output]);
+
+      if (command === "yes") {
+        setAwaitingUglifyConfirm(false);
+        typeLine("ok i warned you...", () => {
+          themeDelayTimerRef.current = window.setTimeout(
+            () => onTheme("ugly"),
+            1100,
+          );
+        });
+        return;
+      }
+
+      if (command === "no") {
+        setAwaitingUglifyConfirm(false);
+        typeLine("uglify cancelled");
+        return;
+      }
+
+      typeLine("type yes if you dare");
+      return;
+    }
 
     if (command === "help") output.push(commandList.join(" | "));
     else if (command === "dir")
@@ -798,8 +1050,12 @@ function Terminal({
     else if (command === "open cv") onOpen("cv");
     else if (command === "open about") onOpen("about");
     else if (command === "beautify") onTheme("3d");
-    else if (command === "uglify") onTheme("ugly");
-    else if (command === "retro") onTheme("retro");
+    else if (command === "uglify") {
+      setLines((current) => [...current, ...output]);
+      setAwaitingUglifyConfirm(true);
+      typeLine("Are you sure? Your eyes might bleed Yes/No");
+      return;
+    } else if (command === "retro") onTheme("retro");
     else output.push("Bad command or file name. Try 'help'.");
 
     setLines((current) => [...current, ...output]);
@@ -911,14 +1167,6 @@ function Taskbar({
             </button>
           ))}
           <hr />
-          <button onClick={() => onTheme("3d")}>
-            <Icon name="spark" />
-            beautify
-          </button>
-          <button onClick={() => onTheme("ugly")}>
-            <Icon name="warning" />
-            uglify
-          </button>
           <button onClick={() => onTheme("retro")}>Classic desktop</button>
         </nav>
       )}

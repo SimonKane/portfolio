@@ -1086,12 +1086,133 @@ svg {
   filter: drop-shadow(1px 2px 0 rgba(0, 0, 0, 0.25));
 }
 
+.fileIconImage {
+  display: block;
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  image-rendering: auto;
+  filter: drop-shadow(1px 2px 0 rgba(0, 0, 0, 0.25));
+  pointer-events: none;
+  user-select: none;
+}
+
 .fileIcon span {
   max-width: 92px;
   font-size: 0.78rem;
   line-height: 1.12;
   overflow-wrap: anywhere;
   text-shadow: none;
+}
+
+.cvFileSurface {
+  position: relative;
+  min-height: 100%;
+  background: #ffffff;
+}
+
+.cvActionDialog {
+  position: absolute;
+  top: 28px;
+  left: min(190px, calc(100% - 292px));
+  z-index: 3;
+  width: min(280px, calc(100% - 20px));
+  padding: 3px;
+  color: #111;
+  border: 2px solid;
+  border-color: #ffffff #404040 #404040 #ffffff;
+  background: #c0c0c0;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.28);
+}
+
+.cvActionDialog header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 28px;
+  padding: 4px 4px 4px 8px;
+  color: #ffffff;
+  background: linear-gradient(90deg, #000080, #1084d0);
+  font-weight: 900;
+}
+
+.cvActionDialog header button {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 20px;
+  padding: 0;
+  color: #111;
+  border: 2px solid;
+  border-color: #ffffff #404040 #404040 #ffffff;
+  background: #c0c0c0;
+  font-weight: 900;
+}
+
+.cvActionDialog p {
+  margin: 12px 8px;
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
+.cvActionDialog div {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 0 8px 8px;
+}
+
+.classicButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 5px 12px;
+  color: #111;
+  border: 2px solid;
+  border-color: #ffffff #404040 #404040 #ffffff;
+  border-radius: 0;
+  background: #c0c0c0;
+  font-weight: 800;
+}
+
+.classicButton:hover,
+.classicButton:focus-visible {
+  background: #d6d6d6;
+}
+
+.cvViewerSurface {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 100%;
+  background: #ffffff;
+}
+
+.cvViewerHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-bottom: 1px solid #9a9a9a;
+  background: #e8e8e8;
+}
+
+.cvViewerHeader strong {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.9rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cvFrame {
+  width: 100%;
+  min-height: 520px;
+  height: 100%;
+  border: 0;
+  background: #ffffff;
 }
 
 .skillsSurface {

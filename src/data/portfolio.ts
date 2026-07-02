@@ -20,6 +20,12 @@ export type SkillCategory = {
   items: SkillItem[];
 };
 
+export type CvFile = {
+  label: string;
+  fileName: string;
+  href: string;
+};
+
 export const portfolio = {
   name: "Simon Kane",
   title: "Full-stack developer & product-minded builder",
@@ -28,8 +34,8 @@ export const portfolio = {
   contact: [
     {
       label: "Email",
-      value: "hello@example.com",
-      href: "mailto:hello@example.com",
+      value: "simon.kaneborn@gmail.com",
+      href: "mailto:simon.kaneborn@gmail.com",
     },
     {
       label: "GitHub",
@@ -39,9 +45,26 @@ export const portfolio = {
     {
       label: "LinkedIn",
       value: "linkedin.com/in/placeholder",
-      href: "https://www.linkedin.com/",
+      href: "https://www.linkedin.com/in/simon-k-2b8918327",
     },
   ],
+  cvFiles: [
+    {
+      label: "ATS-friendly CV",
+      fileName: "Simon Kaneborn - ATS CV.pdf",
+      href: "/cv/simon-kaneborn-ats-cv.pdf",
+    },
+    {
+      label: "CV English",
+      fileName: "Simon Kaneborn - CV-en.pdf",
+      href: "/cv/simon-kaneborn-cv-en.pdf",
+    },
+    {
+      label: "CV Svenska",
+      fileName: "Simon Kaneborn - CV-sv.pdf",
+      href: "/cv/simon-kaneborn-cv-sv.pdf",
+    },
+  ] satisfies CvFile[],
   cv: {
     fileName: "Simon_Kane_CV.placeholder.pdf",
     updated: "Replace with real date",
