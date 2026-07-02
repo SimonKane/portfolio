@@ -87,7 +87,11 @@ svg {
   min-height: 100vh;
   overflow: hidden;
   background:
-    radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.18), transparent 14%),
+    radial-gradient(
+      circle at 18% 22%,
+      rgba(255, 255, 255, 0.18),
+      transparent 14%
+    ),
     linear-gradient(135deg, #0b7f80 0%, #047178 42%, #045c69 100%);
 }
 
@@ -101,14 +105,31 @@ svg {
 
 .aeroDesktop::before {
   background:
-    linear-gradient(115deg, transparent 0 45%, rgba(255, 255, 255, 0.12) 45% 46%, transparent 46%),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 96px),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 96px);
+    linear-gradient(
+      115deg,
+      transparent 0 45%,
+      rgba(255, 255, 255, 0.12) 45% 46%,
+      transparent 46%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.045) 0 1px,
+      transparent 1px 96px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.035) 0 1px,
+      transparent 1px 96px
+    );
   mix-blend-mode: screen;
 }
 
 .aeroDesktop::after {
-  background: radial-gradient(circle at 50% 115%, rgba(255, 255, 255, 0.16), transparent 36%);
+  background: radial-gradient(
+    circle at 50% 115%,
+    rgba(255, 255, 255, 0.16),
+    transparent 36%
+  );
 }
 
 .desktopHero {
@@ -180,7 +201,10 @@ svg {
   border: 1px solid transparent;
   border-radius: 0;
   background: transparent;
-  transition: background var(--duration) ease, border-color var(--duration) ease, transform var(--duration) ease;
+  transition:
+    background var(--duration) ease,
+    border-color var(--duration) ease,
+    transform var(--duration) ease;
 }
 
 .desktopIcon:hover,
@@ -247,7 +271,9 @@ svg {
   border-radius: 0;
   background: #c0c0c0;
   box-shadow: none;
-  transition: filter var(--duration) ease, transform var(--duration) ease;
+  transition:
+    filter var(--duration) ease,
+    transform var(--duration) ease;
 }
 
 .windowControls button:hover {
@@ -263,7 +289,6 @@ svg {
 .windowBody {
   margin: 4px;
   min-height: 280px;
-  padding: 18px;
   color: var(--ink);
   border: 2px solid;
   border-color: #808080 #ffffff #ffffff #808080;
@@ -312,7 +337,10 @@ svg {
   padding: 18px;
   color: var(--ink);
   text-align: left;
-  transition: transform var(--duration) ease, box-shadow var(--duration) ease, border-color var(--duration) ease;
+  transition:
+    transform var(--duration) ease,
+    box-shadow var(--duration) ease,
+    border-color var(--duration) ease;
 }
 
 .folderGrid button:hover {
@@ -436,9 +464,10 @@ svg {
   padding: 16px;
   color: #c7ffe2;
   border: 1px solid rgba(87, 255, 175, 0.34);
-  border-radius: 16px;
+
   background:
-    linear-gradient(rgba(255, 255, 255, 0.035) 50%, transparent 50%) 0 0 / 100% 4px,
+    linear-gradient(rgba(255, 255, 255, 0.035) 50%, transparent 50%) 0 0 / 100%
+      4px,
     #06120d;
   font-family: "Courier New", monospace;
   box-shadow: inset 0 0 42px rgba(103, 232, 249, 0.08);
@@ -552,7 +581,9 @@ svg {
   border-radius: 0;
   background: transparent;
   text-align: left;
-  transition: background var(--duration) ease, transform var(--duration) ease;
+  transition:
+    background var(--duration) ease,
+    transform var(--duration) ease;
 }
 
 .startMenu button:hover {
@@ -594,7 +625,11 @@ svg {
   place-items: center;
   pointer-events: none;
   perspective: 900px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.12), rgba(2, 12, 27, 0.48));
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.12),
+    rgba(2, 12, 27, 0.48)
+  );
   animation: overlayFade 2.8s ease both;
 }
 
@@ -674,8 +709,16 @@ svg {
   padding: 28px;
   color: #eef7ff;
   background:
-    radial-gradient(circle at 12% 10%, rgba(103, 232, 249, 0.24), transparent 28%),
-    radial-gradient(circle at 86% 20%, rgba(37, 99, 235, 0.32), transparent 30%),
+    radial-gradient(
+      circle at 12% 10%,
+      rgba(103, 232, 249, 0.24),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 86% 20%,
+      rgba(37, 99, 235, 0.32),
+      transparent 30%
+    ),
     linear-gradient(135deg, #050816, #111b31 48%, #07111f);
 }
 
@@ -684,7 +727,11 @@ svg {
 .modernGrid article,
 .glassPanel {
   border: 1px solid rgba(255, 255, 255, 0.18);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.055));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.13),
+    rgba(255, 255, 255, 0.055)
+  );
   box-shadow: 0 24px 90px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(18px);
 }
@@ -749,12 +796,15 @@ svg {
   padding: 24px;
   border-radius: 28px;
   transform: perspective(800px) rotateY(calc(var(--tilt) * 1.5deg));
-  transition: transform 260ms ease, border-color 260ms ease;
+  transition:
+    transform 260ms ease,
+    border-color 260ms ease;
 }
 
 .modernGrid article:hover {
   border-color: rgba(103, 232, 249, 0.46);
-  transform: perspective(800px) translateY(-6px) rotateY(calc(var(--tilt) * -3deg));
+  transform: perspective(800px) translateY(-6px)
+    rotateY(calc(var(--tilt) * -3deg));
 }
 
 .projectIndex {
@@ -790,7 +840,12 @@ svg {
   padding: 20px;
   color: #17004a;
   background:
-    repeating-linear-gradient(45deg, #ff4fd8 0 18px, #d8ff00 18px 36px, #00e5ff 36px 54px),
+    repeating-linear-gradient(
+      45deg,
+      #ff4fd8 0 18px,
+      #d8ff00 18px 36px,
+      #00e5ff 36px 54px
+    ),
     #ff4fd8;
   font-family: "Comic Sans MS", "Comic Sans", cursive;
 }
