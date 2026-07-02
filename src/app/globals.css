@@ -981,3 +981,94 @@ svg {
     animation-iteration-count: 1 !important;
   }
 }
+
+/* Classic Windows folder mode: icon + title only, no cards or descriptions. */
+.fileIconGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 104px));
+  align-content: start;
+  gap: 18px 14px;
+  min-height: 100%;
+  padding: 4px;
+  background: #ffffff;
+}
+
+.fileIcon {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 6px;
+  width: 96px;
+  min-height: 86px;
+  padding: 6px 4px;
+  color: #111;
+  border: 1px dotted transparent;
+  background: transparent;
+  box-shadow: none;
+  text-align: center;
+  text-decoration: none;
+}
+
+.fileIcon:hover,
+.fileIcon:focus-visible {
+  color: #ffffff;
+  border-color: #ffffff;
+  background: #000080;
+}
+
+.fileIcon .uiIcon {
+  width: 42px;
+  height: 42px;
+  filter: drop-shadow(1px 2px 0 rgba(0, 0, 0, 0.25));
+}
+
+.fileIcon span {
+  max-width: 92px;
+  font-size: 0.78rem;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+  text-shadow: none;
+}
+
+.windowControls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.windowControls button span {
+  display: block;
+  width: 100%;
+  line-height: 18px;
+  text-align: center;
+}
+
+.taskbar {
+  right: 0;
+  bottom: 0;
+  left: 0;
+  min-height: 42px;
+  padding: 4px;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+}
+
+@media (max-width: 760px) {
+  .taskbar {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 0;
+  }
+
+  .fileIconGrid {
+    grid-template-columns: repeat(auto-fill, minmax(78px, 92px));
+    gap: 14px 10px;
+  }
+}

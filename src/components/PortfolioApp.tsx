@@ -263,110 +263,82 @@ function FolderView({
 }) {
   if (selectedProject) {
     return (
-      <div className="contentStack">
-        <button className="secondaryButton" onClick={() => setSelectedProject(null)}>
-          Back to Projects
+      <div className="fileIconGrid" aria-label={`${selectedProject.name} files`}>
+        <button className="fileIcon" onClick={() => setSelectedProject(null)}>
+          <Icon name="folder" />
+          <span>.. Projects</span>
         </button>
-        <div>
-          <p className="eyebrow">Project folder</p>
-          <h2>{selectedProject.name}</h2>
-          <p>{selectedProject.description}</p>
-        </div>
-        <div className="fileList">
-          <article>
-            <strong>README.txt</strong>
-            <span>{selectedProject.tagline}</span>
-          </article>
-          <article>
-            <strong>screenshots</strong>
-            <span>{selectedProject.screenshots.join(", ")}</span>
-          </article>
-          <a href={selectedProject.liveUrl}>live-project.url</a>
-          <a href={selectedProject.sourceUrl}>source-code.url</a>
-        </div>
+        <button className="fileIcon">
+          <Icon name="document" />
+          <span>README.txt</span>
+        </button>
+        <button className="fileIcon">
+          <Icon name="folder" />
+          <span>screenshots</span>
+        </button>
+        <a className="fileIcon" href={selectedProject.liveUrl}>
+          <Icon name="spark" />
+          <span>live-project.url</span>
+        </a>
+        <a className="fileIcon" href={selectedProject.sourceUrl}>
+          <Icon name="terminal" />
+          <span>source-code.url</span>
+        </a>
       </div>
     );
   }
 
   return (
-    <div className="contentStack">
-      <div>
-        <p className="eyebrow">Portfolio directory</p>
-        <h2>Projects</h2>
-        <p>Open a folder to browse project notes, screenshots, live links, and source links.</p>
-      </div>
-      <div className="folderGrid">
-        {portfolio.projects.map((project) => (
-          <button key={project.id} onClick={() => setSelectedProject(project)}>
-            <Icon name="folder" />
-            <span>{project.name}</span>
-            <small>{project.tagline}</small>
-          </button>
-        ))}
-      </div>
+    <div className="fileIconGrid" aria-label="Project folders">
+      {portfolio.projects.map((project) => (
+        <button className="fileIcon" key={project.id} onClick={() => setSelectedProject(project)}>
+          <Icon name="folder" />
+          <span>{project.name}</span>
+        </button>
+      ))}
     </div>
   );
 }
 
 function CVView() {
   return (
-    <div className="contentStack">
-      <div>
-        <p className="eyebrow">Curriculum vitae</p>
-        <h2>{portfolio.cv.fileName}</h2>
-        <p>{portfolio.cv.summary}</p>
-      </div>
-      <p>
-        <strong>Updated:</strong> {portfolio.cv.updated}
-      </p>
-      <ul className="timelineList">
-        {portfolio.cv.experience.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
-      <p className="note">Place your real CV in /public/cv and update src/data/portfolio.ts.</p>
+    <div className="fileIconGrid" aria-label="CV files">
+      <button className="fileIcon">
+        <Icon name="document" />
+        <span>{portfolio.cv.fileName}</span>
+      </button>
+      <button className="fileIcon">
+        <Icon name="document" />
+        <span>replace-cv-readme.txt</span>
+      </button>
     </div>
   );
 }
 
 function AboutView() {
   return (
-    <div className="contentStack">
-      <div>
-        <p className="eyebrow">About</p>
-        <h2>{portfolio.name}</h2>
-        <h3>{portfolio.title}</h3>
-        <p>{portfolio.shortBio}</p>
-      </div>
-      <div className="chips">
-        {portfolio.skills.map((skill) => (
-          <span key={skill}>{skill}</span>
-        ))}
-      </div>
+    <div className="fileIconGrid" aria-label="About files">
+      <button className="fileIcon">
+        <Icon name="document" />
+        <span>About.txt</span>
+      </button>
+      <button className="fileIcon">
+        <Icon name="document" />
+        <span>Skills.ini</span>
+      </button>
     </div>
   );
 }
 
 function ContactView() {
   return (
-    <div className="contentStack folderSurface">
-      <div>
-        <p className="eyebrow">Contact shortcuts</p>
-        <h2>Contact</h2>
-      </div>
-      <div className="contactList">
-        {portfolio.contact.map((link) => (
-          <a key={link.label} href={link.href}>
-            <span className="contactIcon" aria-hidden="true">
-              <Icon name={getContactIcon(link.label)} />
-            </span>
-            <span className="contactMeta">
-              <strong>{link.label}</strong>
-              <span>{link.value}</span>
-            </span>
-          </a>
-        ))}
-      </div>
+    <div className="fileIconGrid" aria-label="Contact shortcuts">
+      {portfolio.contact.map((link) => (
+        <a className="fileIcon" key={link.label} href={link.href}>
+          <Icon name={getContactIcon(link.label)} />
+          <span>{link.label}</span>
+        </a>
+      ))}
     </div>
   );
 }
