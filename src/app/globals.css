@@ -232,9 +232,12 @@ svg {
 
 .aeroWindow {
   position: absolute;
+  display: flex;
+  flex-direction: column;
   width: min(720px, calc(100vw - 24px));
+  min-height: 340px;
   max-height: calc(100vh - 92px);
-  overflow: auto;
+  overflow: hidden;
   border: 2px solid;
   border-color: #ffffff #3f3f3f #3f3f3f #ffffff;
   border-radius: 0;
@@ -252,6 +255,9 @@ svg {
   color: #ffffff;
   font-weight: 800;
   background: linear-gradient(90deg, #000080, #1084d0);
+  cursor: move;
+  touch-action: none;
+  user-select: none;
   text-shadow: 1px 1px #000;
 }
 
@@ -261,6 +267,7 @@ svg {
 }
 
 .windowControls button {
+  cursor: pointer;
   display: grid;
   place-items: center;
   width: 27px;
@@ -287,8 +294,10 @@ svg {
 }
 
 .windowBody {
+  flex: 1;
   margin: 4px;
   min-height: 280px;
+  overflow: auto;
   color: var(--ink);
   border: 2px solid;
   border-color: #808080 #ffffff #ffffff #808080;

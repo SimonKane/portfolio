@@ -97,6 +97,11 @@ export function PortfolioApp() {
       ),
     );
   };
+  const moveWindow = (id: WindowId, x: number, y: number) => {
+    setWindows((wins) =>
+      wins.map((win) => (win.id === id ? { ...win, x, y } : win)),
+    );
+  };
   const minimizeWindow = (id: WindowId) => {
     setWindows((wins) =>
       wins.map((win) => (win.id === id ? { ...win, minimized: true } : win)),
@@ -132,6 +137,7 @@ export function PortfolioApp() {
           onOpen={openWindow}
           onClose={closeWindow}
           onFocus={focusWindow}
+          onMove={moveWindow}
           onMinimize={minimizeWindow}
           onTheme={switchTheme}
         />
@@ -149,6 +155,7 @@ function RetroDesktop({
   onOpen,
   onClose,
   onFocus,
+  onMove,
   onMinimize,
   onTheme,
 }: {
@@ -160,6 +167,7 @@ function RetroDesktop({
   onOpen: (id: WindowId) => void;
   onClose: (id: WindowId) => void;
   onFocus: (id: WindowId) => void;
+  onMove: (id: WindowId, x: number, y: number) => void;
   onMinimize: (id: WindowId) => void;
   onTheme: (mode: ThemeMode) => void;
 }) {
@@ -191,6 +199,7 @@ function RetroDesktop({
             win={win}
             onFocus={onFocus}
             onClose={onClose}
+            onMove={onMove}
             onMinimize={onMinimize}
           >
             <WindowContent
@@ -242,35 +251,94 @@ function AeroWindow({
   children,
   onFocus,
   onClose,
+  onMove,
   onMinimize,
 }: {
   win: WindowState;
   children: React.ReactNode;
   onFocus: (id: WindowId) => void;
   onClose: (id: WindowId) => void;
+  onMove: (id: WindowId, x: number, y: number) => void;
   onMinimize: (id: WindowId) => void;
 }) {
+  const windowRef = useRef<HTMLElement>(null);
+  const [drag, setDrag] = useState<{
+    pointerId: number;
+    offsetX: number;
+    offsetY: number;
+  } | null>(null);
+
+  const startDrag = (event: React.PointerEvent<HTMLElement>) => {
+    if (event.button !== 0) return;
+
+    const bounds = windowRef.current?.getBoundingClientRect();
+    if (!bounds) return;
+
+    onFocus(win.id);
+    windowRef.current?.setPointerCapture(event.pointerId);
+    setDrag({
+      pointerId: event.pointerId,
+      offsetX: event.clientX - bounds.left,
+      offsetY: event.clientY - bounds.top,
+    });
+  };
+
+  const dragWindow = (event: React.PointerEvent<HTMLElement>) => {
+    if (!drag || event.pointerId !== drag.pointerId) return;
+
+    const bounds = windowRef.current?.getBoundingClientRect();
+    const nextX = event.clientX - drag.offsetX;
+    const nextY = event.clientY - drag.offsetY;
+
+    if (!bounds) {
+      onMove(win.id, nextX, nextY);
+      return;
+    }
+
+    onMove(
+      win.id,
+      Math.max(0, Math.min(nextX, window.innerWidth - bounds.width)),
+      Math.max(0, Math.min(nextY, window.innerHeight - 42)),
+    );
+  };
+
+  const stopDrag = (event: React.PointerEvent<HTMLElement>) => {
+    if (!drag || event.pointerId !== drag.pointerId) return;
+
+    windowRef.current?.releasePointerCapture(event.pointerId);
+    setDrag(null);
+  };
+
   return (
     <section
+      ref={windowRef}
       className="aeroWindow"
       style={{ left: win.x, top: win.y, zIndex: win.z }}
       onMouseDown={() => onFocus(win.id)}
+      onPointerMove={dragWindow}
+      onPointerUp={stopDrag}
+      onPointerCancel={stopDrag}
       aria-label={`${win.title} window`}
     >
-      <header className="titleBar">
+      <header className="titleBar" onPointerDown={startDrag}>
         <span>{win.title}</span>
         <div className="windowControls" aria-label="Window controls">
           <button
+            onPointerDown={(event) => event.stopPropagation()}
             onClick={() => onMinimize(win.id)}
             aria-label={`Minimize ${win.title}`}
           >
             <span aria-hidden="true">−</span>
           </button>
-          <button aria-label={`Maximize ${win.title}`}>
+          <button
+            onPointerDown={(event) => event.stopPropagation()}
+            aria-label={`Maximize ${win.title}`}
+          >
             <span aria-hidden="true">□</span>
           </button>
           <button
             className="closeControl"
+            onPointerDown={(event) => event.stopPropagation()}
             onClick={() => onClose(win.id)}
             aria-label={`Close ${win.title}`}
           >
@@ -393,6 +461,32 @@ function AboutView() {
 }
 
 function ContactView() {
+  const [copied, setCopied] = useState(false);
+  const email = portfolio.contact.find((link) =>
+    link.label.toLowerCase().includes("email"),
+  );
+
+  const copyEmail = async () => {
+    if (!email) return;
+
+    try {
+      await navigator.clipboard.writeText(email.value);
+    } catch {
+      const fallback = document.createElement("textarea");
+      fallback.value = email.value;
+      fallback.setAttribute("readonly", "");
+      fallback.style.position = "fixed";
+      fallback.style.opacity = "0";
+      document.body.appendChild(fallback);
+      fallback.select();
+      document.execCommand("copy");
+      document.body.removeChild(fallback);
+    }
+
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1600);
+  };
+
   return (
     <div className="fileIconGrid" aria-label="Contact shortcuts">
       {portfolio.contact.map((link) => (
@@ -401,6 +495,12 @@ function ContactView() {
           <span>{link.label}</span>
         </a>
       ))}
+      {email && (
+        <button className="fileIcon" type="button" onClick={copyEmail}>
+          <Icon name="mail" />
+          <span>{copied ? "Copied" : "Copy email"}</span>
+        </button>
+      )}
     </div>
   );
 }
@@ -500,6 +600,7 @@ function Taskbar({
   onTheme: (mode: ThemeMode) => void;
 }) {
   const [currentTime, setCurrentTime] = useState("");
+  const taskbarRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const updateTime = () => {
@@ -517,8 +618,33 @@ function Taskbar({
     return () => window.clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    if (!startOpen) return;
+
+    const closeOnOutsidePointerDown = (event: PointerEvent) => {
+      if (
+        event.target instanceof Node &&
+        taskbarRef.current?.contains(event.target)
+      ) {
+        return;
+      }
+
+      setStartOpen(false);
+    };
+
+    document.addEventListener("pointerdown", closeOnOutsidePointerDown, true);
+
+    return () => {
+      document.removeEventListener(
+        "pointerdown",
+        closeOnOutsidePointerDown,
+        true,
+      );
+    };
+  }, [setStartOpen, startOpen]);
+
   return (
-    <footer className="taskbar">
+    <footer className="taskbar" ref={taskbarRef}>
       <button
         className="startButton"
         onClick={() => setStartOpen(!startOpen)}
