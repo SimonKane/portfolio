@@ -9,24 +9,158 @@ export type Project = {
   sourceUrl: string;
 };
 
+export type SkillItem = {
+  name: string;
+  icon: string;
+  progress?: number;
+};
+
+export type SkillCategory = {
+  name: string;
+  items: SkillItem[];
+};
+
 export const portfolio = {
   name: "Simon Kane",
   title: "Full-stack developer & product-minded builder",
   shortBio:
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. I build thoughtful, reliable interfaces with strong attention to product detail and developer experience.",
   contact: [
-    { label: "Email", value: "hello@example.com", href: "mailto:hello@example.com" },
-    { label: "GitHub", value: "github.com/SimonKane", href: "https://github.com/SimonKane" },
-    { label: "LinkedIn", value: "linkedin.com/in/placeholder", href: "https://www.linkedin.com/" }
+    {
+      label: "Email",
+      value: "hello@example.com",
+      href: "mailto:hello@example.com",
+    },
+    {
+      label: "GitHub",
+      value: "github.com/SimonKane",
+      href: "https://github.com/SimonKane",
+    },
+    {
+      label: "LinkedIn",
+      value: "linkedin.com/in/placeholder",
+      href: "https://www.linkedin.com/",
+    },
   ],
   cv: {
     fileName: "Simon_Kane_CV.placeholder.pdf",
     updated: "Replace with real date",
     summary:
       "Mock CV metadata. Replace this file/card with a real CV PDF in /public/cv and update this central data file.",
-    experience: ["Senior Widget Engineer — Lorem Labs", "Frontend Developer — Ipsum Studio", "Software Intern — Dolor Systems"]
+    experience: [
+      "Senior Widget Engineer — Lorem Labs",
+      "Frontend Developer — Ipsum Studio",
+      "Software Intern — Dolor Systems",
+    ],
   },
-  skills: ["TypeScript", "React", "Next.js", "Node.js", "CSS", "UX systems", "Testing", "APIs"],
+  skills: [
+    "TypeScript",
+    "React",
+    "Next.js",
+    "Node.js",
+    "CSS",
+    "UX systems",
+    "Testing",
+    "APIs",
+  ],
+  skillCategories: [
+    {
+      name: "Languages",
+      items: [
+        { name: "JavaScript", icon: "JS" },
+        { name: "TypeScript", icon: "TS" },
+        { name: "Python", icon: "PY", progress: 50 },
+        { name: "C#", icon: "C#", progress: 40 },
+      ],
+    },
+    {
+      name: "Frontend",
+      items: [
+        { name: "React", icon: "R" },
+        { name: "Vue.js", icon: "V" },
+        { name: "HTML", icon: "H5" },
+        { name: "CSS", icon: "CSS" },
+        { name: "Tailwind CSS", icon: "TW" },
+        { name: "Angular", icon: "A", progress: 40 },
+      ],
+    },
+    {
+      name: "Backend",
+      items: [
+        { name: "Node.js", icon: "ND" },
+        { name: "Express.js", icon: "EX" },
+        { name: "REST API Development", icon: "API" },
+        { name: "Authentication (JWT)", icon: "JWT" },
+        { name: "CRUD Operations", icon: "CRUD" },
+        { name: "Middleware", icon: "MW" },
+        { name: "API Routing", icon: "RT" },
+        { name: "File Uploads", icon: "UP" },
+        { name: "Environment Variables", icon: "ENV" },
+        { name: "Error Handling", icon: "ERR" },
+        { name: "WebSockets", icon: "WS", progress: 30 },
+      ],
+    },
+    {
+      name: "Databases",
+      items: [
+        { name: "MySQL", icon: "SQL" },
+        { name: "MongoDB", icon: "MDB" },
+      ],
+    },
+    {
+      name: "API",
+      items: [
+        { name: "REST", icon: "REST" },
+        { name: "GraphQL", icon: "GQL" },
+      ],
+    },
+    {
+      name: "Testing",
+      items: [
+        { name: "Jest", icon: "J" },
+        { name: "Playwright", icon: "PW" },
+        { name: "Cypress", icon: "CY" },
+        { name: "Vitest", icon: "VI", progress: 25 },
+      ],
+    },
+    {
+      name: "AI",
+      items: [
+        { name: "AI Application Development", icon: "AI" },
+        { name: "LLM", icon: "LLM" },
+        { name: "OpenAI API", icon: "OA" },
+        { name: "AI-assisted Development", icon: "AID" },
+        { name: "AI Agents", icon: "AG" },
+      ],
+    },
+    {
+      name: "Cloud & DevOps",
+      items: [
+        { name: "AWS", icon: "AWS" },
+        { name: "Docker", icon: "DK" },
+        { name: "Git", icon: "GIT" },
+        { name: "GitHub", icon: "GH" },
+        { name: "GitHub Actions", icon: "GHA" },
+      ],
+    },
+    {
+      name: "Methodologies",
+      items: [
+        { name: "Agile Development", icon: "AGL" },
+        { name: "Scrum", icon: "SC" },
+        { name: "Kanban", icon: "KB" },
+        { name: "TDD", icon: "TDD", progress: 70 },
+        {
+          name: "CI/CD",
+          icon: "CI",
+        },
+      ],
+    },
+    {
+      name: "Security",
+      items: [{ name: "Cybersecurity", icon: "SEC", progress: 30 }],
+    },
+  ] satisfies SkillCategory[],
   projects: [
     {
       id: "atlas",
@@ -37,7 +171,7 @@ export const portfolio = {
       stack: ["Next.js", "TypeScript", "Charts", "Design Systems"],
       screenshots: ["/screenshots/atlas-placeholder.svg"],
       liveUrl: "https://example.com/atlas",
-      sourceUrl: "https://github.com/SimonKane/atlas-placeholder"
+      sourceUrl: "https://github.com/SimonKane/atlas-placeholder",
     },
     {
       id: "forge",
@@ -48,7 +182,7 @@ export const portfolio = {
       stack: ["React", "IndexedDB", "CSS Modules"],
       screenshots: ["/screenshots/forge-placeholder.svg"],
       liveUrl: "https://example.com/forge",
-      sourceUrl: "https://github.com/SimonKane/forge-placeholder"
+      sourceUrl: "https://github.com/SimonKane/forge-placeholder",
     },
     {
       id: "signal",
@@ -59,7 +193,7 @@ export const portfolio = {
       stack: ["Next.js", "Commerce", "A11y"],
       screenshots: ["/screenshots/signal-placeholder.svg"],
       liveUrl: "https://example.com/signal",
-      sourceUrl: "https://github.com/SimonKane/signal-placeholder"
-    }
-  ] satisfies Project[]
+      sourceUrl: "https://github.com/SimonKane/signal-placeholder",
+    },
+  ] satisfies Project[],
 };

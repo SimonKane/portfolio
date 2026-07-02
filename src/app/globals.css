@@ -235,8 +235,8 @@ svg {
   display: flex;
   flex-direction: column;
   width: min(720px, calc(100vw - 24px));
-  min-height: 340px;
-  max-height: calc(100vh - 92px);
+  min-height: min(340px, calc(100vh - var(--window-top, 0px) - 58px));
+  max-height: calc(100vh - var(--window-top, 0px) - 58px);
   overflow: hidden;
   border: 2px solid;
   border-color: #ffffff #3f3f3f #3f3f3f #ffffff;
@@ -1092,6 +1092,189 @@ svg {
   line-height: 1.12;
   overflow-wrap: anywhere;
   text-shadow: none;
+}
+
+.skillsSurface {
+  min-height: 100%;
+  padding: 12px;
+  color: #111;
+  background: #ffffff;
+}
+
+.skillsHeader {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 8px 8px 14px;
+  border-bottom: 1px solid #c7c7c7;
+}
+
+.skillsBackButton {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  width: 86px;
+  min-height: 70px;
+  padding: 5px 3px;
+  color: #111;
+  border: 1px dotted transparent;
+  background: transparent;
+  text-align: center;
+}
+
+.skillsBackButton:hover,
+.skillsBackButton:focus-visible {
+  color: #ffffff;
+  border-color: #ffffff;
+  background: #000080;
+}
+
+.skillsBackButton .uiIcon {
+  width: 38px;
+  height: 38px;
+}
+
+.skillsBackButton span {
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.skillsHeader h2,
+.skillsHeader p,
+.skillsCategory h3 {
+  margin: 0;
+}
+
+.skillsHeader h2 {
+  font-family: "Courier New", monospace;
+  font-size: 1rem;
+}
+
+.skillsHeader p {
+  max-width: 720px;
+  color: #444;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.skillsCategoryList {
+  display: grid;
+  gap: 18px;
+  padding: 14px 4px 4px;
+}
+
+.skillsCategory {
+  display: grid;
+  gap: 10px;
+}
+
+.skillsCategory h3 {
+  padding: 3px 7px;
+  color: #ffffff;
+  background: #000080;
+  font-family: "Courier New", monospace;
+  font-size: 0.88rem;
+  font-weight: 900;
+}
+
+.skillsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  gap: 18px 14px;
+}
+
+.skillTile {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 7px;
+  min-height: 120px;
+  padding: 4px 3px;
+  text-align: center;
+}
+
+.skillIcon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  color: #111;
+  /* border: 2px solid;
+  border-color: #ffffff #404040 #404040 #ffffff; */
+  background: #f4f4f4;
+  /* box-shadow: 1px 2px 0 rgba(0, 0, 0, 0.22); */
+}
+
+.techIconSvg {
+  width: 42px;
+  height: 42px;
+}
+
+.techIconSvg text {
+  fill: #ffffff;
+  font-family: "Archivo", Arial, sans-serif;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0;
+  dominant-baseline: middle;
+}
+
+.skillTile:nth-child(4n + 1) .skillIcon {
+  background: #ffffff;
+}
+
+.skillTile:nth-child(4n + 2) .skillIcon {
+  background: #f0fff8;
+}
+
+.skillTile:nth-child(4n + 3) .skillIcon {
+  background: #fff8ef;
+}
+
+.skillTile:nth-child(4n + 4) .skillIcon {
+  background: #f6f3ff;
+}
+
+.skillName {
+  max-width: 112px;
+  min-height: 2.2em;
+  color: #111;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.skillProgressWrap {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  width: 96px;
+}
+
+.skillProgressText {
+  color: #000080;
+  font-family: "Courier New", monospace;
+  font-size: 0.66rem;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.skillProgress {
+  width: 96px;
+  height: 11px;
+  padding: 2px;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  background: #ffffff;
+}
+
+.skillProgress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #000080, #1084d0);
 }
 
 .windowControls button {
