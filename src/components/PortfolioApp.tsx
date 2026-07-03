@@ -621,8 +621,60 @@ function FileImageIcon({ src, alt }: { src: string; alt: string }) {
   );
 }
 
+const TECH_ICON_SOURCES: Record<string, string> = {
+  "ai application development": "/svg/TensorFlow.svg",
+  angular: "/svg/Angular.svg",
+  "api routing": "/svg/OpenAPI.svg",
+  aws: "/svg/AWS.svg",
+  bash: "/svg/Bash.svg",
+  "c#": "/svg/C%23-(CSharp).svg",
+  "ci/cd": "/svg/GitHub-Actions.svg",
+  css: "/svg/CSS3.svg",
+  cypress: "/svg/Cypress.svg",
+  docker: "/svg/Docker.svg",
+  "express.js": "/svg/Express.svg",
+  firebase: "/svg/Firebase.svg",
+  git: "/svg/Git.svg",
+  github: "/svg/GitHub.svg",
+  "github actions": "/svg/GitHub-Actions.svg",
+  graphql: "/svg/GraphQL.svg",
+  html: "/svg/HTML5.svg",
+  javascript: "/svg/JavaScript.svg",
+  jest: "/svg/Jest.svg",
+  mongodb: "/svg/MongoDB.svg",
+  mongoose: "/svg/Mongoose.js.svg",
+  mysql: "/svg/MySQL.svg",
+  "node.js": "/svg/Node.js.svg",
+  "openai api": "/svg/OpenAPI.svg",
+  playwright: "/svg/Playwrite.svg",
+  postgres: "/svg/PostgresSQL.svg",
+  python: "/svg/Python.svg",
+  react: "/svg/React.svg",
+  rest: "/svg/OpenAPI.svg",
+  "rest api development": "/svg/OpenAPI.svg",
+  "tailwind css": "/svg/Tailwind-CSS.svg",
+  tdd: "/svg/Jest.svg",
+  typescript: "/svg/TypeScript.svg",
+  vitest: "/svg/Vite.svg",
+  "vue.js": "/svg/Vue.js.svg",
+  websockets: "/svg/Socket.io.svg",
+};
+
 function TechIcon({ label, fallback }: { label: string; fallback: string }) {
   const key = label.toLowerCase();
+  const iconSrc = TECH_ICON_SOURCES[key];
+  if (iconSrc) {
+    return (
+      <img
+        className="techIconSvg"
+        src={iconSrc}
+        alt=""
+        aria-hidden="true"
+        draggable="false"
+      />
+    );
+  }
+
   const textIcon = (text: string, color = "#1267c7") => (
     <svg className="techIconSvg" viewBox="0 0 48 48" aria-hidden="true">
       <rect x="5" y="5" width="38" height="38" rx="7" fill={color} />
@@ -1234,11 +1286,27 @@ function ThreeDPortfolio({ onTheme }: { onTheme: (mode: ThemeMode) => void }) {
 }
 
 function UglyPortfolio({ onTheme }: { onTheme: (mode: ThemeMode) => void }) {
+  const [profileDismissed, setProfileDismissed] = useState(false);
+
   return (
     <main className="uglyShell">
       <div className="fakeMarquee">
         <span>WELCOME TO THE PORTFOLIO ZONE — TASTE FILTER NOT FOUND</span>
       </div>
+      <button
+        className={`uglyProfileStage ${profileDismissed ? "is-exiting" : ""}`}
+        type="button"
+        onClick={() => setProfileDismissed(true)}
+        aria-label="Spin profile image away"
+      >
+        <span className="uglyProfileBurst" aria-hidden="true" />
+        <img
+          className="uglyProfileImage"
+          src="/uglify-profile-image.png"
+          alt=""
+          draggable="false"
+        />
+      </button>
       <h1>{portfolio.name}</h1>
       <div className="uglyActions">
         <button onClick={() => onTheme("retro")}>make it normal</button>

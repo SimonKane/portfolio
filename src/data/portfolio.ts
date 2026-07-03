@@ -115,10 +115,7 @@ export const portfolio = {
         { name: "REST API Development", icon: "API" },
         { name: "Authentication (JWT)", icon: "JWT" },
         { name: "CRUD Operations", icon: "CRUD" },
-        { name: "Middleware", icon: "MW" },
         { name: "API Routing", icon: "RT" },
-        { name: "File Uploads", icon: "UP" },
-        { name: "Environment Variables", icon: "ENV" },
         { name: "Error Handling", icon: "ERR" },
         { name: "WebSockets", icon: "WS", progress: 30 },
       ],
@@ -128,6 +125,11 @@ export const portfolio = {
       items: [
         { name: "MySQL", icon: "SQL" },
         { name: "MongoDB", icon: "MDB" },
+        { name: "Postgres", icon: "PG" },
+        { name: "Supabase", icon: "SB" },
+        { name: "Firebase", icon: "FB" },
+        { name: "Mongoose", icon: "MG" },
+        { name: "Prisma", icon: "PR" },
       ],
     },
     {
@@ -153,7 +155,6 @@ export const portfolio = {
         { name: "LLM", icon: "LLM" },
         { name: "OpenAI API", icon: "OA" },
         { name: "AI-assisted Development", icon: "AID" },
-        { name: "AI Agents", icon: "AG" },
       ],
     },
     {
@@ -164,14 +165,13 @@ export const portfolio = {
         { name: "Git", icon: "GIT" },
         { name: "GitHub", icon: "GH" },
         { name: "GitHub Actions", icon: "GHA" },
+        { name: "Bash", icon: "SH" },
       ],
     },
     {
       name: "Methodologies",
       items: [
-        { name: "Agile Development", icon: "AGL" },
         { name: "Scrum", icon: "SC" },
-        { name: "Kanban", icon: "KB" },
         { name: "TDD", icon: "TDD", progress: 70 },
         {
           name: "CI/CD",

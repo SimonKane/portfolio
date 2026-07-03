@@ -873,6 +873,71 @@ svg {
   animation: marquee 8s linear infinite;
 }
 
+.uglyProfileStage {
+  position: relative;
+  display: grid !important;
+  place-items: center;
+  width: min(62vw, 380px);
+  min-height: 300px;
+  margin: 30px auto 0 !important;
+  padding: 0 !important;
+  cursor: pointer;
+  border: 0 !important;
+  background: transparent !important;
+  animation:
+    uglyProfileArrive 1.35s cubic-bezier(0.18, 0.88, 0.28, 1.18) both,
+    uglyProfileWobble 1.25s ease-in-out 1.35s infinite;
+  transform-origin: center;
+}
+
+.uglyProfileStage.is-exiting {
+  pointer-events: none;
+  animation: uglyProfileExit 0.8s ease-in forwards;
+}
+
+.uglyProfileBurst {
+  position: absolute;
+  inset: 12px -12px -4px;
+  z-index: 0;
+  background:
+    linear-gradient(135deg, #ff3bd4 0 48%, #fff300 48% 100%);
+  clip-path: polygon(
+    50% 0%,
+    58% 18%,
+    73% 4%,
+    75% 26%,
+    96% 18%,
+    84% 39%,
+    100% 50%,
+    82% 58%,
+    96% 82%,
+    73% 74%,
+    68% 100%,
+    50% 82%,
+    32% 100%,
+    27% 74%,
+    4% 82%,
+    18% 58%,
+    0% 50%,
+    16% 39%,
+    4% 18%,
+    25% 26%,
+    27% 4%,
+    42% 18%
+  );
+  filter: drop-shadow(9px 9px 0 #ff7adf);
+}
+
+.uglyProfileImage {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: min(92%, 340px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(12px 12px 0 #fff300) drop-shadow(-8px -8px 0 #ff3bd4);
+}
+
 .uglyShell h1 {
   margin: 24px 0;
   color: blue;
@@ -958,6 +1023,42 @@ svg {
 @keyframes marquee {
   to {
     transform: translateX(-100%);
+  }
+}
+
+@keyframes uglyProfileArrive {
+  0% {
+    opacity: 0;
+    transform: translateX(-42vw) scale(0.35) rotate(-360deg);
+  }
+  72% {
+    opacity: 1;
+    transform: translateX(0) scale(1.08) rotate(0deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes uglyProfileExit {
+  0% {
+    opacity: 1;
+    transform: translateX(0) scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(120vw) scale(0.45) rotate(540deg);
+  }
+}
+
+@keyframes uglyProfileWobble {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
   }
 }
 
@@ -1328,8 +1429,10 @@ svg {
 }
 
 .techIconSvg {
+  display: block;
   width: 42px;
   height: 42px;
+  object-fit: contain;
 }
 
 .techIconSvg text {
