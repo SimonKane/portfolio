@@ -657,8 +657,39 @@ function CVView() {
 
 function AboutView() {
   const [openFile, setOpenFile] = useState<"about" | "skills" | null>(null);
+  const aboutText = useMemo(() => aboutDetailParagraphs.join("\n\n"), []);
+  const [typedAboutText, setTypedAboutText] = useState("");
 
-  if (openFile !== "skills") {
+  useEffect(() => {
+    if (openFile !== "about") {
+      setTypedAboutText("");
+      return;
+    }
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (prefersReducedMotion) {
+      setTypedAboutText(aboutText);
+      return;
+    }
+
+    setTypedAboutText("");
+    let index = 0;
+    const typeTimer = window.setInterval(() => {
+      index = Math.min(index + 8, aboutText.length);
+      setTypedAboutText(aboutText.slice(0, index));
+
+      if (index >= aboutText.length) {
+        window.clearInterval(typeTimer);
+      }
+    }, 8);
+
+    return () => window.clearInterval(typeTimer);
+  }, [aboutText, openFile]);
+
+  if (openFile === null) {
     return (
       <div className="fileIconGrid" aria-label="About files">
         <button className="fileIcon" onClick={() => setOpenFile("about")}>
@@ -672,6 +703,31 @@ function AboutView() {
           />
           <span>Skills.ini</span>
         </button>
+      </div>
+    );
+  }
+
+  if (openFile === "about") {
+    return (
+      <div className="aboutRetroFileSurface" aria-label="About.txt">
+        <header className="projectFileHeader">
+          <button className="classicButton" onClick={() => setOpenFile(null)}>
+            Back
+          </button>
+          <strong>About.txt</strong>
+        </header>
+        <article className="aboutRetroDocument">
+          <img
+            className="aboutRetroImage"
+            src="/about-me-retro.png"
+            alt="Simon Kane in retro style"
+            draggable="false"
+          />
+          <pre className="aboutRetroTypewriter" aria-live="polite">
+            {renderTypedAboutText(typedAboutText)}
+            <span className="aboutRetroCaret" aria-hidden="true" />
+          </pre>
+        </article>
       </div>
     );
   }
@@ -1348,7 +1404,7 @@ function Taskbar({
 
 const aboutDetailParagraphs = [
   "Programming started as curiosity. I wanted to understand how things worked, then how to improve them, and eventually how to build them from scratch. What began as self-learning quickly became something I couldn't stop doing. Today I've recently finished Full Stack Development at CHAS Academy while spending most of my free time building products, experimenting with AI and trying to expand my knowledge in cybersecurity.",
-  "It actually started because I wanted to make a tiny browser game for my niece. No AI, no tutorials to copy, no Stack Overflow rabbit hole, just plain React, stubbornness and an unhealthy amount of trial and error. That little passion project eventually became <Ellie's mini game> Looking back, it might not win any awards, so be kind. But it was a project that holds a special place in my heart and a start to this journey. ",
+  "It actually started because I wanted to make a tiny browser game for my niece. No AI, no tutorials to copy, no Stack Overflow rabbit hole, just plain React, stubbornness and an unhealthy amount of trial and error. That little passion project eventually became <ellies mini game> Looking back, it might not win any awards, so be kind. But it was a project that holds a special place in my heart and a start to this journey. ",
   "I'm not particularly attached to specific frameworks or languages. Technologies change. Curiosity doesn't. I enjoy learning whatever a project requires, whether that's React, TypeScript, Node.js, cloud services or something completely new. For me it's always been more about solving problems than collecting technologies.",
   "I also love creating products from the ground up. That's how projects like TrioPick, LogFix AI and Nextract came to life. Taking an idea from a blank page to something that people can actually use is easily my favorite part of software development.",
   "Outside of programming you'll probably find me in the gym, where I spend an unreasonable amount of time convincing myself that one more set is a good idea. Music has been a huge part of my life for years as well—I write, play and produce whenever inspiration shows up. And yes, I'm a Liverpool supporter, which has taught me resilience, patience and how to emotionally recover from a football match before Monday morning.",
@@ -1357,7 +1413,7 @@ const aboutDetailParagraphs = [
 ];
 
 function renderAboutParagraph(paragraph: string) {
-  const linkText = "<Ellie's mini game>";
+  const linkText = "<ellies mini game>";
   if (!paragraph.includes(linkText)) return paragraph;
 
   const [before, after] = paragraph.split(linkText);
@@ -1366,7 +1422,28 @@ function renderAboutParagraph(paragraph: string) {
     <>
       {before}
       <a
-        href="https://elliesminispel.netlify.app"
+        href="https://elliesminispel.netlify.app/"
+        target="_blank"
+        rel="noreferrer"
+      >
+        {linkText}
+      </a>
+      {after}
+    </>
+  );
+}
+
+function renderTypedAboutText(text: string) {
+  const linkText = "<ellies mini game>";
+  if (!text.includes(linkText)) return text;
+
+  const [before, after] = text.split(linkText);
+
+  return (
+    <>
+      {before}
+      <a
+        href="https://elliesminispel.netlify.app/"
         target="_blank"
         rel="noreferrer"
       >

@@ -1509,8 +1509,12 @@ svg {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
   font-weight: 900;
-  line-height: 1;
+  line-height: 0;
   text-align: center;
+}
+.projectDetailClose svg,
+.projectDetailClose span {
+  display: block;
 }
 
 .triopickProjectImage {
@@ -2183,8 +2187,7 @@ svg {
       rgba(216, 255, 0, 0.9) 18px 36px,
       rgba(0, 229, 255, 0.92) 36px 54px
     ),
-    repeating-linear-gradient(90deg, #ff0000 0 7px, #00ff00 7px 14px),
-    #ff4fd8;
+    repeating-linear-gradient(90deg, #ff0000 0 7px, #00ff00 7px 14px), #ff4fd8;
 }
 
 .uglyShell::selection {
@@ -2236,9 +2239,7 @@ svg {
   place-items: center;
   width: min(162px, 42vw);
   aspect-ratio: 1;
-  filter:
-    drop-shadow(8px 8px 0 #0000ff)
-    drop-shadow(-5px -5px 0 #00ffff);
+  filter: drop-shadow(8px 8px 0 #0000ff) drop-shadow(-5px -5px 0 #00ffff);
 }
 
 .uglyPanicBurst::before,
@@ -2274,12 +2275,11 @@ svg {
 }
 
 .uglyPanicBurst::before {
-  background:
-    repeating-conic-gradient(
-      from 8deg,
-      #ffff00 0 14deg,
-      #ff0000 14deg 28deg
-    );
+  background: repeating-conic-gradient(
+    from 8deg,
+    #ffff00 0 14deg,
+    #ff0000 14deg 28deg
+  );
 }
 
 .uglyPanicBurst::after {
@@ -2365,13 +2365,12 @@ svg {
 .uglyProjectZone {
   padding: clamp(16px, 3.6vw, 34px);
   border: 9px ridge #00ffff;
-  background:
-    repeating-linear-gradient(
-      -8deg,
-      #ffff00 0 24px,
-      #ff9bf1 24px 48px,
-      #a6ff00 48px 72px
-    );
+  background: repeating-linear-gradient(
+    -8deg,
+    #ffff00 0 24px,
+    #ff9bf1 24px 48px,
+    #a6ff00 48px 72px
+  );
   box-shadow:
     12px 12px 0 #ff0000,
     -8px -8px 0 #0000ff;
@@ -2417,8 +2416,11 @@ svg {
   display: grid;
   place-items: center;
   padding: 18px;
-  background:
-    repeating-radial-gradient(circle, rgba(0, 0, 255, 0.86) 0 10px, rgba(255, 0, 255, 0.78) 10px 20px);
+  background: repeating-radial-gradient(
+    circle,
+    rgba(0, 0, 255, 0.86) 0 10px,
+    rgba(255, 0, 255, 0.78) 10px 20px
+  );
 }
 
 .uglyModal {
@@ -2739,8 +2741,11 @@ svg {
   gap: 12px;
   padding: 18px;
   border: 7px dashed #0000ff;
-  background:
-    repeating-linear-gradient(90deg, #00ffff 0 18px, #ffff00 18px 36px);
+  background: repeating-linear-gradient(
+    90deg,
+    #00ffff 0 18px,
+    #ffff00 18px 36px
+  );
   box-shadow:
     inset 0 0 0 6px #ff00ff,
     8px 8px 0 #ff0000;
@@ -3034,8 +3039,11 @@ svg {
     max-height: 454px;
     padding: 10px;
     border: 7px dashed #0000ff;
-    background:
-      repeating-linear-gradient(90deg, #00ffff 0 18px, #ffff00 18px 36px);
+    background: repeating-linear-gradient(
+      90deg,
+      #00ffff 0 18px,
+      #ffff00 18px 36px
+    );
     box-shadow:
       inset 0 0 0 6px #ff00ff,
       8px 8px 0 #ff0000;
@@ -3102,6 +3110,17 @@ svg {
   82% {
     opacity: 1;
   }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes aboutRetroCaretBlink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
   100% {
     opacity: 0;
   }
@@ -3415,6 +3434,76 @@ svg {
   border: 2px solid;
   border-color: #808080 #ffffff #ffffff #808080;
   background: #ffffff;
+}
+
+.aboutRetroFileSurface {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 100%;
+  color: #111;
+  background: #ffffff;
+}
+
+.aboutRetroDocument {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  justify-items: center;
+  gap: 14px;
+  min-height: 0;
+  padding: 16px;
+  overflow: auto;
+  background: #ffffff;
+}
+
+.aboutRetroImage {
+  display: block;
+  width: min(220px, 72%);
+  max-height: 190px;
+  object-fit: contain;
+  image-rendering: auto;
+  filter: drop-shadow(2px 3px 0 rgba(0, 0, 0, 0.22));
+  pointer-events: none;
+  user-select: none;
+}
+
+.aboutRetroTypewriter {
+  justify-self: stretch;
+  width: 100%;
+  max-width: 640px;
+  min-height: 0;
+  margin: 0;
+  padding: 12px;
+  overflow: visible;
+  color: #111;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  background: #f7f7f7;
+  font-family: "Courier New", monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.aboutRetroTypewriter a {
+  color: #0000ee;
+  text-decoration: underline;
+}
+
+.aboutRetroTypewriter a:hover,
+.aboutRetroTypewriter a:focus-visible {
+  color: #551a8b;
+}
+
+.aboutRetroCaret {
+  display: inline-block;
+  width: 0.6ch;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.12em;
+  background: #111;
+  animation: aboutRetroCaretBlink 720ms steps(1) infinite;
 }
 
 .triopickFolderSurface {
