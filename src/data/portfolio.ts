@@ -28,9 +28,12 @@ export type CvFile = {
 
 export const portfolio = {
   name: "Simon Kane",
-  title: "Full-stack developer & product-minded builder",
-  shortBio:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. I build thoughtful, reliable interfaces with strong attention to product detail and developer experience.",
+  title: `Full-stack developer with experience in modern web applications, product development
+and problem solving. I adapt quickly to new technologies, languages and frameworks while
+deepening my knowledge in cybersecurity.`,
+  shortBio: `Before becoming a developer I spent more than a decade working in healthcare administration. I decided to start to teach my self about programming.
+
+Today I build products and continuously try to expand my knowledge in AI and cybersecurity. I enjoy taking ideas from concept to production, especially in teams and I'm always looking for the next challenge.`,
   contact: [
     {
       label: "Email",
@@ -217,6 +220,17 @@ export const portfolio = {
       screenshots: ["/screenshots/signal-placeholder.svg"],
       liveUrl: "https://example.com/signal",
       sourceUrl: "https://github.com/SimonKane/signal-placeholder",
+    },
+    {
+      id: "nextract",
+      name: "Nextract",
+      tagline: "A product idea shaped from scratch.",
+      description:
+        "A placeholder project card for testing the carousel flow with more than three projects in the beautify view.",
+      stack: ["React", "TypeScript", "Product Design"],
+      screenshots: ["/screenshots/nextract-placeholder.svg"],
+      liveUrl: "https://example.com/nextract",
+      sourceUrl: "https://github.com/SimonKane/nextract-placeholder",
     },
   ] satisfies Project[],
 };

@@ -139,7 +139,7 @@ export function PortfolioApp() {
     <div className={`portfolioRoot mode-${theme}`}>
       {transition && <TransitionOverlay label={transition} mode={theme} />}
       {theme === "3d" ? (
-        <ThreeDPortfolio onTheme={switchTheme} />
+        <BeautifyPortfolio onTheme={switchTheme} />
       ) : theme === "ugly" ? (
         <UglyPortfolio onTheme={switchTheme} />
       ) : (
@@ -1234,93 +1234,860 @@ function Taskbar({
   );
 }
 
-function ThreeDPortfolio({ onTheme }: { onTheme: (mode: ThemeMode) => void }) {
+const aboutDetailParagraphs = [
+  "Programming started as curiosity. I wanted to understand how things worked, then how to improve them, and eventually how to build them from scratch. What began as self-learning quickly became something I couldn't stop doing. Today I've recently finished Full Stack Development at CHAS Academy while spending most of my free time building products, experimenting with AI and trying to expand my knowledge in cybersecurity.",
+  "It actually started because I wanted to make a tiny browser game for my niece. No AI, no tutorials to copy, no Stack Overflow rabbit hole, just plain React, stubbornness and an unhealthy amount of trial and error. That little passion project eventually became <Ellie's mini game> Looking back, it might not win any awards, so be kind. But it was a project that holds a special place in my heart and a start to this journey. ",
+  "I'm not particularly attached to specific frameworks or languages. Technologies change. Curiosity doesn't. I enjoy learning whatever a project requires, whether that's React, TypeScript, Node.js, cloud services or something completely new. For me it's always been more about solving problems than collecting technologies.",
+  "I also love creating products from the ground up. That's how projects like TrioPick, LogFix AI and Nextract came to life. Taking an idea from a blank page to something that people can actually use is easily my favorite part of software development.",
+  "Outside of programming you'll probably find me in the gym, where I spend an unreasonable amount of time convincing myself that one more set is a good idea. Music has been a huge part of my life for years as well—I write, play and produce whenever inspiration shows up. And yes, I'm a Liverpool supporter, which has taught me resilience, patience and how to emotionally recover from a football match before Monday morning.",
+  "One thing I've also accepted is that I'm absolutely terrible at naming things. Variables, projects, side projects... if you've ever wondered why half of my early repositories have questionable names, now you know. Thankfully, naming things is one of the few programming problems that Git commits let you fix later.",
+  "At the end of the day, I simply enjoy building things. I like working with curious people, solving interesting problems and constantly pushing myself to become a better engineer than I was yesterday. If that sounds like the kind of person you'd enjoy working with, I'd love to have a conversation.",
+];
+
+function renderAboutParagraph(paragraph: string) {
+  const linkText = "<Ellie's mini game>";
+  if (!paragraph.includes(linkText)) return paragraph;
+
+  const [before, after] = paragraph.split(linkText);
+
   return (
-    <main className="modernShell">
+    <>
+      {before}
+      <a
+        href="https://elliesminispel.netlify.app"
+        target="_blank"
+        rel="noreferrer"
+      >
+        {linkText}
+      </a>
+      {after}
+    </>
+  );
+}
+
+function ProjectCardContent({
+  project,
+  index,
+}: {
+  project: Project;
+  index: number;
+}) {
+  return (
+    <>
+      <span className="projectIndex">0{index + 1}</span>
+      <h2>{project.name}</h2>
+      <p>{project.description}</p>
+      <div className="chips">
+        {project.stack.map((skill) => (
+          <small key={skill}>{skill}</small>
+        ))}
+      </div>
+      <div className="projectLinks">
+        <a href={project.liveUrl}>Live</a>
+        <a href={project.sourceUrl}>Source</a>
+      </div>
+    </>
+  );
+}
+
+function carouselSlotClass(index: number, offset: number, total: number) {
+  const slot = (index - offset + total) % total;
+  return slot < 3 ? `mobileSlot-${slot}` : "mobileSlotHidden";
+}
+
+function BeautifyPortfolio({
+  onTheme,
+}: {
+  onTheme: (mode: ThemeMode) => void;
+}) {
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [projectOffset, setProjectOffset] = useState(0);
+  const [cvOffset, setCvOffset] = useState(0);
+  const [contactOffset, setContactOffset] = useState(0);
+  const skillDragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    scrollLeft: number;
+  } | null>(null);
+  const copyrightYear = new Date().getFullYear();
+  const email = portfolio.contact.find((link) =>
+    link.label.toLowerCase().includes("email"),
+  );
+  const skillsByCategory = (categoryNames: string[]) =>
+    portfolio.skillCategories
+      .filter((category) => categoryNames.includes(category.name))
+      .flatMap((category) => category.items);
+  const skillRows = [
+    {
+      label: "Frontend and languages",
+      skills: skillsByCategory(["Languages", "Frontend"]),
+    },
+    {
+      label: "Backend",
+      skills: skillsByCategory(["Backend", "Databases", "API"]),
+    },
+    {
+      label: "Tooling, AI, methods and security",
+      skills: skillsByCategory([
+        "Testing",
+        "AI",
+        "Cloud & DevOps",
+        "Methodologies",
+        "Security",
+      ]),
+    },
+  ];
+  const hasProjectCarousel = portfolio.projects.length > 3;
+  const visibleProjects = [-1, 0, 1].map(
+    (slot) =>
+      portfolio.projects[
+        (projectOffset + slot + portfolio.projects.length) %
+          portfolio.projects.length
+      ],
+  );
+  const rotateProjects = (direction: -1 | 1) => {
+    setProjectOffset((current) => {
+      const total = portfolio.projects.length;
+      return (current + direction + total) % total;
+    });
+  };
+  const rotateCvCards = (direction: -1 | 1) => {
+    setCvOffset((current) => {
+      const total = portfolio.cvFiles.length;
+      return (current + direction + total) % total;
+    });
+  };
+  const contactCardCount = portfolio.contact.length + (email ? 1 : 0);
+  const rotateContactCards = (direction: -1 | 1) => {
+    setContactOffset((current) => {
+      return (current + direction + contactCardCount) % contactCardCount;
+    });
+  };
+
+  const startSkillDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return;
+
+    skillDragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      scrollLeft: event.currentTarget.scrollLeft,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
+    event.currentTarget.classList.add("is-dragging");
+    event.preventDefault();
+  };
+
+  const moveSkillDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    const drag = skillDragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+
+    event.currentTarget.scrollLeft =
+      drag.scrollLeft - (event.clientX - drag.startX);
+  };
+
+  const stopSkillDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    const drag = skillDragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+
+    event.currentTarget.releasePointerCapture(event.pointerId);
+    event.currentTarget.classList.remove("is-dragging");
+    skillDragRef.current = null;
+  };
+
+  const copyEmail = async () => {
+    if (!email) return;
+
+    try {
+      await navigator.clipboard.writeText(email.value);
+    } catch {
+      const fallback = document.createElement("textarea");
+      fallback.value = email.value;
+      fallback.setAttribute("readonly", "");
+      fallback.style.position = "fixed";
+      fallback.style.opacity = "0";
+      document.body.appendChild(fallback);
+      fallback.select();
+      document.execCommand("copy");
+      document.body.removeChild(fallback);
+    }
+
+    setCopiedEmail(true);
+    window.setTimeout(() => setCopiedEmail(false), 1600);
+  };
+
+  return (
+    <main className="modernShell" id="top">
       <nav className="modernNav">
-        <strong>{portfolio.name}</strong>
-        <span>
+        <a className="modernBrand" href="#top" aria-label="Go to top">
+          {portfolio.name}
+        </a>
+        <div className="modernNavLinks" aria-label="Beautify sections">
+          <a href="#about">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#skills">Skills</a>
+          <a href="#cv">CV</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <span className="modernModeActions">
           <button onClick={() => onTheme("retro")}>Classic desktop</button>
-          <button onClick={() => onTheme("ugly")}>Uglify</button>
         </span>
       </nav>
-      <section className="hero3d">
-        <p className="eyebrow">Dimensional case-study mode</p>
-        <h1>{portfolio.title}</h1>
-        <p>{portfolio.shortBio}</p>
-        <div className="heroActions">
-          <a href={portfolio.contact[0].href}>Start a conversation</a>
-          <button onClick={() => onTheme("retro")}>Return to desktop</button>
+
+      <section className="hero3d modernSection" aria-label="Intro">
+        <div className="heroCopy">
+          <h1>{portfolio.name}</h1>
+          <p>{portfolio.title}</p>
+          <div className="heroActions">
+            <a href="#contact">Start a conversation</a>
+            <a href="#projects">View work</a>
+          </div>
+        </div>
+        <div className="heroSignal" aria-hidden="true">
+          <span>Building products. Solving problems. </span>
+          <strong>Fullstack Engineer</strong>
+          <small>Always learning</small>
         </div>
       </section>
-      <section className="modernGrid" aria-label="Project highlights">
-        {portfolio.projects.map((project, index) => (
-          <article
-            key={project.id}
-            style={
-              { "--tilt": `${index % 2 === 0 ? -1 : 1}` } as React.CSSProperties
-            }
+
+      <section className="modernSection modernSplit" id="about">
+        <div>
+          <h2>
+            I&apos;m much better at building things than writing about
+            myself....
+          </h2>
+        </div>
+        <div className="aboutIntro">
+          <p>{portfolio.shortBio}</p>
+          <button
+            className="aboutMoreButton"
+            type="button"
+            onClick={() => setAboutOpen(true)}
+            aria-label="Read more about Simon Kane"
           >
-            <span className="projectIndex">0{index + 1}</span>
-            <h2>{project.name}</h2>
-            <p>{project.description}</p>
-            <div className="chips">
-              {project.stack.map((skill) => (
-                <small key={skill}>{skill}</small>
+            <span aria-hidden="true" />
+          </button>
+        </div>
+      </section>
+
+      {aboutOpen && (
+        <div
+          className="aboutModalOverlay"
+          role="presentation"
+          onClick={() => setAboutOpen(false)}
+        >
+          <article
+            className="aboutModal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="about-modal-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              className="aboutModalClose"
+              type="button"
+              onClick={() => setAboutOpen(false)}
+              aria-label="Close about text"
+            >
+              <span aria-hidden="true">x</span>
+            </button>
+            <h2 id="about-modal-title">A little more about me</h2>
+            <div className="aboutModalText">
+              {aboutDetailParagraphs.map((paragraph) => (
+                <p key={paragraph}>{renderAboutParagraph(paragraph)}</p>
               ))}
             </div>
           </article>
-        ))}
+        </div>
+      )}
+
+      <section
+        className={`modernSection ${
+          hasProjectCarousel ? "projectCarouselSection" : "modernGrid"
+        }`}
+        id="projects"
+        aria-label="Project highlights"
+      >
+        {hasProjectCarousel ? (
+          <>
+            <div className="projectCarouselHeader">
+              <div className="sectionHeading"></div>
+            </div>
+            <div className="projectCarouselFrame">
+              <button
+                className="projectCarouselArrow"
+                type="button"
+                onClick={() => rotateProjects(-1)}
+                aria-label="Previous projects"
+              >
+                <span aria-hidden="true">&lsaquo;</span>
+              </button>
+              <div className="projectCarouselViewport" aria-live="polite">
+                {visibleProjects.map((project, slotIndex) => {
+                  const realIndex = portfolio.projects.findIndex(
+                    (item) => item.id === project.id,
+                  );
+                  return (
+                    <article
+                      className={`projectCarouselCard projectSlot-${slotIndex}`}
+                      key={`${project.id}-${projectOffset}-${slotIndex}`}
+                    >
+                      <ProjectCardContent project={project} index={realIndex} />
+                    </article>
+                  );
+                })}
+              </div>
+              <button
+                className="projectCarouselArrow"
+                type="button"
+                onClick={() => rotateProjects(1)}
+                aria-label="Next projects"
+              >
+                <span aria-hidden="true">&rsaquo;</span>
+              </button>
+            </div>
+          </>
+        ) : (
+          portfolio.projects.map((project, index) => (
+            <article
+              key={project.id}
+              style={
+                {
+                  "--tilt": `${index % 2 === 0 ? -1 : 1}`,
+                } as React.CSSProperties
+              }
+            >
+              <ProjectCardContent project={project} index={index} />
+            </article>
+          ))
+        )}
       </section>
-      <section className="glassPanel">
-        <h2>Skills & contact</h2>
-        <p>{portfolio.skills.join(" · ")}</p>
-        {portfolio.contact.map((contact) => (
-          <a key={contact.label} href={contact.href}>
-            {contact.label}
-          </a>
-        ))}
+
+      <section className="modernSection skillsShowcase" id="skills">
+        <div className="sectionHeading">
+          <h2>Current toolkit. Future unknown.</h2>
+        </div>
+        <div className="skillBelt" aria-label="Skill carousel">
+          {skillRows.map((row) => (
+            <div
+              className="skillBeltScroller"
+              key={row.label}
+              onPointerDown={startSkillDrag}
+              onPointerMove={moveSkillDrag}
+              onPointerUp={stopSkillDrag}
+              onPointerCancel={stopSkillDrag}
+              aria-label={row.label}
+            >
+              <div className="skillBeltRow">
+                {[...row.skills, ...row.skills].map((skill, index) => (
+                  <span
+                    className="modernSkillPill"
+                    key={`${row.label}-${skill.name}-${index}`}
+                  >
+                    <TechIcon label={skill.name} fallback={skill.icon} />
+                    <span>{skill.name}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
+
+      <section className="modernSection cvSection" id="cv">
+        <div className="sectionHeading">
+          <h2>Different audience. Same developer.</h2>
+        </div>
+        <div className="mobileCardFrame">
+          <button
+            className="mobileStackArrow"
+            type="button"
+            onClick={() => rotateCvCards(-1)}
+            aria-label="Previous CV"
+          >
+            <span aria-hidden="true">&lsaquo;</span>
+          </button>
+          <div className="cvCards mobileStackCards">
+            {portfolio.cvFiles.map((cv, index) => (
+              <a
+                className={`cvCard ${carouselSlotClass(
+                  index,
+                  cvOffset,
+                  portfolio.cvFiles.length,
+                )}`}
+                key={cv.href}
+                href={cv.href}
+                download
+              >
+                <span className="cvIconBurst" aria-hidden="true">
+                  <Icon name="document" />
+                </span>
+                <strong>{cv.label}</strong>
+              </a>
+            ))}
+          </div>
+          <button
+            className="mobileStackArrow"
+            type="button"
+            onClick={() => rotateCvCards(1)}
+            aria-label="Next CV"
+          >
+            <span aria-hidden="true">&rsaquo;</span>
+          </button>
+        </div>
+      </section>
+
+      <section className="modernSection contactSection" id="contact">
+        <div className="sectionHeading">
+          <h2>Get in touch</h2>
+        </div>
+        <div className="mobileCardFrame">
+          <button
+            className="mobileStackArrow"
+            type="button"
+            onClick={() => rotateContactCards(-1)}
+            aria-label="Previous contact option"
+          >
+            <span aria-hidden="true">&lsaquo;</span>
+          </button>
+          <div className="contactCards mobileStackCards">
+            {portfolio.contact.map((contact, index) => (
+              <a
+                className={`contactCard ${carouselSlotClass(
+                  index,
+                  contactOffset,
+                  contactCardCount,
+                )}`}
+                key={contact.label}
+                href={contact.href}
+              >
+                <Icon name={getContactIcon(contact.label)} />
+                <span>{contact.label}</span>
+              </a>
+            ))}
+            {email && (
+              <button
+                className={`contactCard ${carouselSlotClass(
+                  portfolio.contact.length,
+                  contactOffset,
+                  contactCardCount,
+                )}`}
+                type="button"
+                onClick={copyEmail}
+              >
+                <Icon name="mail" />
+                <span>Email</span>
+                <strong>{copiedEmail ? "Copied" : "Copy address"}</strong>
+              </button>
+            )}
+          </div>
+          <button
+            className="mobileStackArrow"
+            type="button"
+            onClick={() => rotateContactCards(1)}
+            aria-label="Next contact option"
+          >
+            <span aria-hidden="true">&rsaquo;</span>
+          </button>
+        </div>
+      </section>
+
+      <footer className="modernFooter">
+        <p>&copy; {copyrightYear} Simon Kane</p>
+      </footer>
     </main>
   );
 }
 
 function UglyPortfolio({ onTheme }: { onTheme: (mode: ThemeMode) => void }) {
   const [profileDismissed, setProfileDismissed] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [projectOffset, setProjectOffset] = useState(0);
+  const [cvOffset, setCvOffset] = useState(0);
+  const [contactOffset, setContactOffset] = useState(0);
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [uglySkillPage, setUglySkillPage] = useState(0);
+  const email = portfolio.contact.find((link) =>
+    link.label.toLowerCase().includes("email"),
+  );
+  const loudSkills = portfolio.skillCategories.flatMap(
+    (category) => category.items,
+  );
+  const uglySkillPageSize = 18;
+  const uglySkillPageCount = Math.max(
+    1,
+    Math.ceil(loudSkills.length / uglySkillPageSize),
+  );
+  const uglySkillPages = Array.from({ length: uglySkillPageCount }, (_, page) =>
+    Array.from({ length: uglySkillPageSize }, (_, pageSlot) => {
+      const slotIndex = page * uglySkillPageSize + pageSlot;
+      return {
+        skill: loudSkills[slotIndex % loudSkills.length],
+        slotIndex,
+      };
+    }),
+  );
+  const visibleProjects = [-1, 0, 1].map(
+    (slot) =>
+      portfolio.projects[
+        (projectOffset + slot + portfolio.projects.length) %
+          portfolio.projects.length
+      ],
+  );
+  const contactCardCount = portfolio.contact.length + (email ? 1 : 0);
+
+  const rotateProjects = (direction: -1 | 1) => {
+    setProjectOffset((current) => {
+      const total = portfolio.projects.length;
+      return (current + direction + total) % total;
+    });
+  };
+  const rotateCvCards = (direction: -1 | 1) => {
+    setCvOffset((current) => {
+      const total = portfolio.cvFiles.length;
+      return (current + direction + total) % total;
+    });
+  };
+  const rotateContactCards = (direction: -1 | 1) => {
+    setContactOffset((current) => {
+      return (current + direction + contactCardCount) % contactCardCount;
+    });
+  };
+  const rotateUglySkills = (direction: -1 | 1) => {
+    setUglySkillPage((current) => {
+      return (current + direction + uglySkillPageCount) % uglySkillPageCount;
+    });
+  };
+  const copyEmail = async () => {
+    if (!email) return;
+
+    try {
+      await navigator.clipboard.writeText(email.value);
+    } catch {
+      const fallback = document.createElement("textarea");
+      fallback.value = email.value;
+      fallback.setAttribute("readonly", "");
+      fallback.style.position = "fixed";
+      fallback.style.opacity = "0";
+      document.body.appendChild(fallback);
+      fallback.select();
+      document.execCommand("copy");
+      document.body.removeChild(fallback);
+    }
+
+    setCopiedEmail(true);
+    window.setTimeout(() => setCopiedEmail(false), 1600);
+  };
 
   return (
-    <main className="uglyShell">
+    <main className="uglyShell" id="ugly-top">
       <div className="fakeMarquee">
-        <span>WELCOME TO THE PORTFOLIO ZONE — TASTE FILTER NOT FOUND</span>
+        <span>WELCOME TO THE PORTFOLIO ZONE - TASTE FILTER NOT FOUND</span>
       </div>
+
       <button
-        className={`uglyProfileStage ${profileDismissed ? "is-exiting" : ""}`}
+        className="uglyPanicButton"
         type="button"
-        onClick={() => setProfileDismissed(true)}
-        aria-label="Spin profile image away"
+        onClick={() => onTheme("3d")}
+        aria-label="Take me back to beautify mode"
       >
-        <span className="uglyProfileBurst" aria-hidden="true" />
-        <img
-          className="uglyProfileImage"
-          src="/uglify-profile-image.png"
-          alt=""
-          draggable="false"
-        />
+        <span className="uglyPanicBurst" aria-hidden="true">
+          <img src="/panic-button.png" alt="" draggable="false" />
+        </span>
+        <span className="uglyPanicLabel">Take me back</span>
       </button>
-      <h1>{portfolio.name}</h1>
-      <div className="uglyActions">
-        <button onClick={() => onTheme("retro")}>make it normal</button>
-        <button onClick={() => onTheme("3d")}>fancy mode</button>
-      </div>
-      <div className="uglyCards">
-        {portfolio.projects.map((project) => (
-          <article key={project.id}>
-            <h2>{project.name}</h2>
-            <p>{project.description}</p>
-            <a href={project.liveUrl}>CLICK RESPONSIBLY</a>
+
+      <section className="uglyHero uglySection" aria-label="Uglify intro">
+        <div className="uglyHeroCopy">
+          <h1>
+            Simon <span className="uglyBlinkName">Kane</span>
+          </h1>
+          <p>{portfolio.title}</p>
+          <div className="uglyActions">
+            <a href="#ugly-contact">START A CONVERSATION!!</a>
+            <a href="#ugly-projects">LOOK AT WORK NOW</a>
+          </div>
+        </div>
+        <button
+          className={`uglyProfileStage ${profileDismissed ? "is-exiting" : ""}`}
+          type="button"
+          onClick={() => setProfileDismissed(true)}
+          aria-label="Spin profile image away"
+        >
+          <span className="uglyProfileBurst" aria-hidden="true" />
+          <img
+            className="uglyProfileImage"
+            src="/uglify-profile-image.png"
+            alt=""
+            draggable="false"
+          />
+        </button>
+      </section>
+
+      <section className="uglySection uglyAbout" id="ugly-about">
+        <div>
+          <h2>
+            I&apos;m much better at building things than writing about
+            myself....
+          </h2>
+        </div>
+        <div>
+          <p>{portfolio.shortBio}</p>
+          <button type="button" onClick={() => setAboutOpen(true)}>
+            READ TOO MUCH
+          </button>
+        </div>
+      </section>
+
+      {aboutOpen && (
+        <div
+          className="uglyModalOverlay"
+          role="presentation"
+          onClick={() => setAboutOpen(false)}
+        >
+          <article
+            className="uglyModal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="ugly-about-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              className="uglyModalClose"
+              type="button"
+              onClick={() => setAboutOpen(false)}
+              aria-label="Close about text"
+            >
+              x
+            </button>
+            <h2 id="ugly-about-title">A little more about me, unfortunately</h2>
+            {aboutDetailParagraphs.map((paragraph) => (
+              <p key={paragraph}>{renderAboutParagraph(paragraph)}</p>
+            ))}
           </article>
-        ))}
-      </div>
+        </div>
+      )}
+
+      <section
+        className="uglySection uglyProjectZone"
+        id="ugly-projects"
+        aria-label="Project highlights"
+      >
+        <div className="uglySectionHeader">
+          <h2>PROJECTS THAT SURVIVED THE DESIGN INCIDENT</h2>
+        </div>
+        <div className="uglyCarousel">
+          <button
+            className="uglyArrow"
+            type="button"
+            onClick={() => rotateProjects(-1)}
+            aria-label="Previous projects"
+          >
+            &lt;&lt;
+          </button>
+          <div className="uglyCards" aria-live="polite">
+            {visibleProjects.map((project, slotIndex) => {
+              const realIndex = portfolio.projects.findIndex(
+                (item) => item.id === project.id,
+              );
+              return (
+                <article
+                  className={`uglyProjectCard uglyProjectSlot-${slotIndex}`}
+                  key={`${project.id}-${projectOffset}-${slotIndex}`}
+                >
+                  <span className="projectIndex">0{realIndex + 1}</span>
+                  <h3>{project.name}</h3>
+                  <p>{project.description}</p>
+                  <div className="chips">
+                    {project.stack.map((skill) => (
+                      <small key={skill}>{skill}</small>
+                    ))}
+                  </div>
+                  <div className="projectLinks">
+                    <a href={project.liveUrl}>CLICK RESPONSIBLY</a>
+                    <a href={project.sourceUrl}>SOURCE CHAOS</a>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+          <button
+            className="uglyArrow"
+            type="button"
+            onClick={() => rotateProjects(1)}
+            aria-label="Next projects"
+          >
+            &gt;&gt;
+          </button>
+        </div>
+      </section>
+
+      <section className="uglySection uglySkills" id="ugly-skills">
+        <div className="uglySectionHeader">
+          <h2>Current toolkit. Future unknown.</h2>
+        </div>
+        <div className="uglySkillFrame">
+          <button
+            className="uglySkillArrow"
+            type="button"
+            onClick={() => rotateUglySkills(-1)}
+            aria-label="Previous skills"
+          >
+            &lt;
+          </button>
+          <div
+            className="uglySkillWall"
+            aria-label="Skills"
+          >
+            {loudSkills.map((skill, index) => (
+              <span
+                className="uglySkillTile"
+                key={`${skill.name}-${index}`}
+                style={
+                  {
+                    "--skill-tilt": `${(index % 5) - 2}deg`,
+                  } as React.CSSProperties
+                }
+              >
+                <TechIcon label={skill.name} fallback={skill.icon} />
+                {skill.name}
+              </span>
+            ))}
+          </div>
+          <div className="uglySkillViewport" aria-label="Skills">
+            <div
+              className="uglySkillTrack"
+              style={
+                {
+                  "--skill-page": uglySkillPage,
+                } as React.CSSProperties
+              }
+            >
+              {uglySkillPages.map((page, pageIndex) => (
+                <div className="uglySkillPage" key={`skill-page-${pageIndex}`}>
+                  {page.map(({ skill, slotIndex }) => (
+                    <span
+                      className="uglySkillTile"
+                      key={`${skill.name}-${slotIndex}`}
+                      style={
+                        {
+                          "--skill-tilt": `${(slotIndex % 5) - 2}deg`,
+                        } as React.CSSProperties
+                      }
+                    >
+                      <TechIcon label={skill.name} fallback={skill.icon} />
+                      {skill.name}
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+          <button
+            className="uglySkillArrow"
+            type="button"
+            onClick={() => rotateUglySkills(1)}
+            aria-label="Next skills"
+          >
+            &gt;
+          </button>
+        </div>
+      </section>
+
+      <section className="uglySection uglyDownloads" id="ugly-cv">
+        <div className="uglySectionHeader">
+          <h2>Different audience. Same developer.</h2>
+        </div>
+        <div className="uglyMiniCarousel">
+          <button
+            className="uglyArrow"
+            type="button"
+            onClick={() => rotateCvCards(-1)}
+            aria-label="Previous CV"
+          >
+            &lt;
+          </button>
+          <div className="uglyMiniCards">
+            {portfolio.cvFiles.map((cv, index) => (
+              <a
+                className={`uglyCvCard ${carouselSlotClass(
+                  index,
+                  cvOffset,
+                  portfolio.cvFiles.length,
+                )}`}
+                key={cv.href}
+                href={cv.href}
+                download
+              >
+                <Icon name="document" />
+                <strong>{cv.label}</strong>
+              </a>
+            ))}
+          </div>
+          <button
+            className="uglyArrow"
+            type="button"
+            onClick={() => rotateCvCards(1)}
+            aria-label="Next CV"
+          >
+            &gt;
+          </button>
+        </div>
+      </section>
+
+      <section className="uglySection uglyContact" id="ugly-contact">
+        <div className="uglySectionHeader">
+          <h2>Get in touch</h2>
+        </div>
+        <div className="uglyMiniCarousel">
+          <button
+            className="uglyArrow"
+            type="button"
+            onClick={() => rotateContactCards(-1)}
+            aria-label="Previous contact option"
+          >
+            &lt;
+          </button>
+          <div className="uglyMiniCards">
+            {portfolio.contact.map((contact, index) => (
+              <a
+                className={`uglyContactCard ${carouselSlotClass(
+                  index,
+                  contactOffset,
+                  contactCardCount,
+                )}`}
+                key={contact.label}
+                href={contact.href}
+              >
+                <Icon name={getContactIcon(contact.label)} />
+                <strong>{contact.label}</strong>
+              </a>
+            ))}
+            {email && (
+              <button
+                className={`uglyContactCard ${carouselSlotClass(
+                  portfolio.contact.length,
+                  contactOffset,
+                  contactCardCount,
+                )}`}
+                type="button"
+                onClick={copyEmail}
+              >
+                <Icon name="mail" />
+                <strong>{copiedEmail ? "COPIED!!!" : "COPY EMAIL"}</strong>
+              </button>
+            )}
+          </div>
+          <button
+            className="uglyArrow"
+            type="button"
+            onClick={() => rotateContactCards(1)}
+            aria-label="Next contact option"
+          >
+            &gt;
+          </button>
+        </div>
+      </section>
     </main>
   );
 }
