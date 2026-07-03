@@ -349,7 +349,12 @@ function AeroWindow({
       aria-label={`${win.title} window`}
     >
       <header className="titleBar" onPointerDown={startDrag}>
-        <span>{win.title}</span>
+        <span className="titleBarText">
+          <span>{win.title}</span>
+          {win.id === "projects" && (
+            <small>- Some of the projects with more to come</small>
+          )}
+        </span>
         <div className="windowControls" aria-label="Window controls">
           <button
             onPointerDown={(event) => event.stopPropagation()}
@@ -412,45 +417,152 @@ function FolderView({
   selectedProject: Project | null;
   setSelectedProject: (project: Project | null) => void;
 }) {
+  const [openProjectFile, setOpenProjectFile] = useState<
+    "readme" | "preview" | null
+  >(null);
+
   if (selectedProject) {
+    const previewSrc = selectedProject.screenshots[0];
+    const closeProject = () => {
+      setOpenProjectFile(null);
+      setSelectedProject(null);
+    };
+
+    if (selectedProject.id === "triopick") {
+      return (
+        <div className="triopickFolderSurface">
+          <button className="triopickBackButton" onClick={closeProject}>
+            <Icon name="folder" />
+            <span>.. Projects</span>
+          </button>
+          <div className="triopickFolderContent">
+            <p>
+              Triopick is my private project and the company I co-founded. I
+              cannot share the source code publicly, but the product is live,
+              with an official launch coming soon. It is currently in Swedish.
+            </p>
+            <a
+              className="triopickLaunchIcon"
+              href="https://triopick.se/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Open Triopick"
+            >
+              <img src="/triopick-icon.png" alt="" draggable="false" />
+              <span>triopick.se</span>
+            </a>
+          </div>
+        </div>
+      );
+    }
+
+    if (openProjectFile === "readme") {
+      return (
+        <div className="projectFileSurface">
+          <header className="projectFileHeader">
+            <button
+              className="classicButton"
+              onClick={() => setOpenProjectFile(null)}
+            >
+              Back
+            </button>
+            <strong>README.txt - {selectedProject.name}</strong>
+          </header>
+          <article className="projectReadmeText">
+            <h2>{selectedProject.name}</h2>
+            <p>{selectedProject.readme}</p>
+            <div className="chips">
+              {selectedProject.stack.map((skill) => (
+                <small key={skill}>{skill}</small>
+              ))}
+            </div>
+          </article>
+        </div>
+      );
+    }
+
+    if (openProjectFile === "preview" && previewSrc) {
+      return (
+        <div className="projectFileSurface">
+          <header className="projectFileHeader">
+            <button
+              className="classicButton"
+              onClick={() => setOpenProjectFile(null)}
+            >
+              Back
+            </button>
+            <strong>Preview.jpg - {selectedProject.name}</strong>
+          </header>
+          <div className="projectPreviewPane">
+            <img
+              src={previewSrc}
+              alt={`${selectedProject.name} preview`}
+            />
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div
         className="fileIconGrid"
         aria-label={`${selectedProject.name} files`}
       >
-        <button className="fileIcon" onClick={() => setSelectedProject(null)}>
+        <button className="fileIcon" onClick={closeProject}>
           <Icon name="folder" />
           <span>.. Projects</span>
         </button>
-        <button className="fileIcon">
+        <button
+          className="fileIcon"
+          onClick={() => setOpenProjectFile("readme")}
+        >
           <Icon name="document" />
           <span>README.txt</span>
         </button>
-        <button className="fileIcon">
-          <Icon name="folder" />
-          <span>screenshots</span>
-        </button>
-        <a className="fileIcon" href={selectedProject.liveUrl}>
+        {previewSrc && (
+          <button
+            className="fileIcon"
+            onClick={() => setOpenProjectFile("preview")}
+          >
+            <FileImageIcon src={previewSrc} alt="" />
+            <span>Preview.jpg</span>
+          </button>
+        )}
+        <a
+          className="fileIcon"
+          href={selectedProject.liveUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
           <Icon name="spark" />
-          <span>live-project.url</span>
+          <span>live-project</span>
         </a>
-        <a className="fileIcon" href={selectedProject.sourceUrl}>
-          <Icon name="terminal" />
-          <span>source-code.url</span>
+        <a
+          className="fileIcon"
+          href={selectedProject.sourceUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Icon name="github" />
+          <span>source-code</span>
         </a>
       </div>
     );
   }
 
   return (
-    <div className="fileIconGrid" aria-label="Project folders">
+    <div className="fileIconGrid projectFolderGrid" aria-label="Project folders">
       {portfolio.projects.map((project) => (
         <button
-          className="fileIcon"
+          className="fileIcon projectFolderIcon"
           key={project.id}
           onClick={() => setSelectedProject(project)}
         >
-          <Icon name="folder" />
+          {project.folderIcon ? (
+            <FileImageIcon src={project.folderIcon} alt="" />
+          ) : (
+            <Icon name="folder" />
+          )}
           <span>{project.name}</span>
         </button>
       ))}
@@ -1210,7 +1322,7 @@ function Taskbar({
         <nav className="startMenu" aria-label="Start menu">
           <div className="startMenuHeader">
             <strong>{portfolio.name}</strong>
-            <span>{portfolio.title}</span>
+            <span>Portfolio shortcuts</span>
           </div>
           {shortcuts.map((shortcut) => (
             <button key={shortcut.id} onClick={() => onOpen(shortcut.id)}>
@@ -1267,26 +1379,92 @@ function renderAboutParagraph(paragraph: string) {
 
 function ProjectCardContent({
   project,
-  index,
+  onDetails,
 }: {
   project: Project;
-  index: number;
+  onDetails: (project: Project) => void;
 }) {
+  const isTriopick = project.id === "triopick";
+
   return (
     <>
-      <span className="projectIndex">0{index + 1}</span>
-      <h2>{project.name}</h2>
-      <p>{project.description}</p>
+      {isTriopick ? (
+        <div className="triopickProjectImage" aria-label={project.name}>
+          <img src="/triopick-image.png" alt="" draggable="false" />
+        </div>
+      ) : (
+        <h2>{project.name}</h2>
+      )}
+      <div className="projectDescriptionRow">
+        <p>{project.description}</p>
+        <button
+          className="projectDetailsButton"
+          type="button"
+          onClick={() => onDetails(project)}
+          aria-label={`Read full text for ${project.name}`}
+        >
+          &rsaquo;
+        </button>
+      </div>
       <div className="chips">
         {project.stack.map((skill) => (
           <small key={skill}>{skill}</small>
         ))}
       </div>
       <div className="projectLinks">
-        <a href={project.liveUrl}>Live</a>
-        <a href={project.sourceUrl}>Source</a>
+        <a href={project.liveUrl} target="_blank" rel="noreferrer">
+          Live
+        </a>
+        {project.sourceUrl.includes("github.com") && (
+          <a
+            className="projectGithubLink"
+            href={project.sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`${project.name} source code on GitHub`}
+          >
+            <Icon name="github" />
+          </a>
+        )}
       </div>
     </>
+  );
+}
+
+function ProjectDetailModal({
+  project,
+  variant = "modern",
+  onClose,
+}: {
+  project: Project;
+  variant?: "modern" | "ugly";
+  onClose: () => void;
+}) {
+  return (
+    <div
+      className={`projectDetailOverlay projectDetailOverlay-${variant}`}
+      role="presentation"
+      onClick={onClose}
+    >
+      <article
+        className="projectDetailModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={`project-detail-${project.id}`}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button
+          className="projectDetailClose"
+          type="button"
+          onClick={onClose}
+          aria-label="Close project text"
+        >
+          x
+        </button>
+        <h2 id={`project-detail-${project.id}`}>{project.name}</h2>
+        <p>{project.readme || project.description}</p>
+      </article>
+    </div>
   );
 }
 
@@ -1305,6 +1483,7 @@ function BeautifyPortfolio({
   const [projectOffset, setProjectOffset] = useState(0);
   const [cvOffset, setCvOffset] = useState(0);
   const [contactOffset, setContactOffset] = useState(0);
+  const [expandedProject, setExpandedProject] = useState<Project | null>(null);
   const skillDragRef = useRef<{
     pointerId: number;
     startX: number;
@@ -1339,12 +1518,9 @@ function BeautifyPortfolio({
     },
   ];
   const hasProjectCarousel = portfolio.projects.length > 3;
-  const visibleProjects = [-1, 0, 1].map(
+  const visibleProjects = [0, 1, 2].map(
     (slot) =>
-      portfolio.projects[
-        (projectOffset + slot + portfolio.projects.length) %
-          portfolio.projects.length
-      ],
+      portfolio.projects[(projectOffset + slot) % portfolio.projects.length],
   );
   const rotateProjects = (direction: -1 | 1) => {
     setProjectOffset((current) => {
@@ -1430,7 +1606,7 @@ function BeautifyPortfolio({
           <a href="#contact">Contact</a>
         </div>
         <span className="modernModeActions">
-          <button onClick={() => onTheme("retro")}>Classic desktop</button>
+          <button onClick={() => onTheme("retro")}>Retroify</button>
         </span>
       </nav>
 
@@ -1524,15 +1700,15 @@ function BeautifyPortfolio({
               </button>
               <div className="projectCarouselViewport" aria-live="polite">
                 {visibleProjects.map((project, slotIndex) => {
-                  const realIndex = portfolio.projects.findIndex(
-                    (item) => item.id === project.id,
-                  );
                   return (
                     <article
                       className={`projectCarouselCard projectSlot-${slotIndex}`}
                       key={`${project.id}-${projectOffset}-${slotIndex}`}
                     >
-                      <ProjectCardContent project={project} index={realIndex} />
+                      <ProjectCardContent
+                        project={project}
+                        onDetails={setExpandedProject}
+                      />
                     </article>
                   );
                 })}
@@ -1557,7 +1733,10 @@ function BeautifyPortfolio({
                 } as React.CSSProperties
               }
             >
-              <ProjectCardContent project={project} index={index} />
+              <ProjectCardContent
+                project={project}
+                onDetails={setExpandedProject}
+              />
             </article>
           ))
         )}
@@ -1695,6 +1874,12 @@ function BeautifyPortfolio({
       <footer className="modernFooter">
         <p>&copy; {copyrightYear} Simon Kane</p>
       </footer>
+      {expandedProject && (
+        <ProjectDetailModal
+          project={expandedProject}
+          onClose={() => setExpandedProject(null)}
+        />
+      )}
     </main>
   );
 }
@@ -1707,6 +1892,7 @@ function UglyPortfolio({ onTheme }: { onTheme: (mode: ThemeMode) => void }) {
   const [contactOffset, setContactOffset] = useState(0);
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [uglySkillPage, setUglySkillPage] = useState(0);
+  const [expandedProject, setExpandedProject] = useState<Project | null>(null);
   const email = portfolio.contact.find((link) =>
     link.label.toLowerCase().includes("email"),
   );
@@ -1788,8 +1974,8 @@ function UglyPortfolio({ onTheme }: { onTheme: (mode: ThemeMode) => void }) {
       <button
         className="uglyPanicButton"
         type="button"
-        onClick={() => onTheme("3d")}
-        aria-label="Take me back to beautify mode"
+        onClick={() => onTheme("retro")}
+        aria-label="Take me back to classic desktop mode"
       >
         <span className="uglyPanicBurst" aria-hidden="true">
           <img src="/panic-button.png" alt="" draggable="false" />
@@ -1887,25 +2073,41 @@ function UglyPortfolio({ onTheme }: { onTheme: (mode: ThemeMode) => void }) {
           </button>
           <div className="uglyCards" aria-live="polite">
             {visibleProjects.map((project, slotIndex) => {
-              const realIndex = portfolio.projects.findIndex(
-                (item) => item.id === project.id,
-              );
               return (
                 <article
                   className={`uglyProjectCard uglyProjectSlot-${slotIndex}`}
-                  key={`${project.id}-${projectOffset}-${slotIndex}`}
+                  key={`ugly-project-slot-${slotIndex}`}
                 >
-                  <span className="projectIndex">0{realIndex + 1}</span>
                   <h3>{project.name}</h3>
-                  <p>{project.description}</p>
+                  <div className="uglyProjectDescriptionRow">
+                    <p>{project.description}</p>
+                    <button
+                      className="uglyProjectDetailsButton"
+                      type="button"
+                      onClick={() => setExpandedProject(project)}
+                      aria-label={`Read full text for ${project.name}`}
+                    >
+                      &gt;
+                    </button>
+                  </div>
                   <div className="chips">
                     {project.stack.map((skill) => (
                       <small key={skill}>{skill}</small>
                     ))}
                   </div>
                   <div className="projectLinks">
-                    <a href={project.liveUrl}>CLICK RESPONSIBLY</a>
-                    <a href={project.sourceUrl}>SOURCE CHAOS</a>
+                    <a href={project.liveUrl} target="_blank" rel="noreferrer">
+                      CLICK RESPONSIBLY
+                    </a>
+                    {project.sourceUrl.includes("github.com") && (
+                      <a
+                        href={project.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        SOURCE CHAOS
+                      </a>
+                    )}
                   </div>
                 </article>
               );
@@ -1935,10 +2137,7 @@ function UglyPortfolio({ onTheme }: { onTheme: (mode: ThemeMode) => void }) {
           >
             &lt;
           </button>
-          <div
-            className="uglySkillWall"
-            aria-label="Skills"
-          >
+          <div className="uglySkillWall" aria-label="Skills">
             {loudSkills.map((skill, index) => (
               <span
                 className="uglySkillTile"
@@ -1993,6 +2192,14 @@ function UglyPortfolio({ onTheme }: { onTheme: (mode: ThemeMode) => void }) {
           </button>
         </div>
       </section>
+
+      {expandedProject && (
+        <ProjectDetailModal
+          project={expandedProject}
+          variant="ugly"
+          onClose={() => setExpandedProject(null)}
+        />
+      )}
 
       <section className="uglySection uglyDownloads" id="ugly-cv">
         <div className="uglySectionHeader">

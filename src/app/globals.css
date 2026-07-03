@@ -250,6 +250,7 @@ svg {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
   min-height: 32px;
   padding: 4px 5px 4px 10px;
   color: #ffffff;
@@ -261,8 +262,28 @@ svg {
   text-shadow: 1px 1px #000;
 }
 
+.titleBarText {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.titleBarText small {
+  min-width: 0;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.72);
+}
+
 .windowControls {
   display: flex;
+  flex: 0 0 auto;
   gap: 5px;
 }
 
@@ -1266,7 +1287,7 @@ svg {
 
 .projectCarouselViewport {
   position: relative;
-  min-height: 390px;
+  min-height: 560px;
   overflow: hidden;
   perspective: 1200px;
 }
@@ -1276,10 +1297,11 @@ svg {
   top: 32px;
   left: 50%;
   display: grid;
+  grid-template-rows: auto minmax(0, auto) auto 1fr auto;
   align-content: start;
   gap: 14px;
   width: min(390px, 78vw);
-  min-height: 310px;
+  min-height: 420px;
   padding: 24px;
   color: #eef7ff;
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -1310,9 +1332,63 @@ svg {
   margin: 0;
 }
 
+.projectCarouselCard h2 {
+  line-height: 1.05;
+}
+
 .projectCarouselCard p {
+  display: -webkit-box;
+  overflow: hidden;
   color: #bdd5eb;
   line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+}
+
+.projectDescriptionRow {
+  position: relative;
+  min-width: 0;
+}
+
+.projectDescriptionRow p {
+  min-width: 0;
+  padding-right: 18px;
+}
+
+.projectDetailsButton {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  display: block;
+  width: 14px;
+  height: 18px;
+  padding: 0;
+  color: #eaf7ff;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  opacity: 0.72;
+}
+
+.projectDetailsButton:hover,
+.projectDetailsButton:focus-visible {
+  background: transparent;
+  opacity: 1;
+}
+
+.projectCarouselCard .chips {
+  gap: 6px;
+}
+
+.projectCarouselCard .chips small {
+  padding: 5px 8px;
+  font-size: 0.74rem;
+  line-height: 1;
 }
 
 .projectSlot-0 {
@@ -1345,16 +1421,122 @@ svg {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  align-self: end;
   margin-top: auto;
 }
 
 .projectLinks a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
   padding: 9px 12px;
   color: #07111f;
   border-radius: 999px;
   background: #ffffff;
   font-size: 0.86rem;
   font-weight: 900;
+}
+
+.projectGithubLink {
+  width: 42px;
+  padding: 7px !important;
+}
+
+.projectGithubLink .uiIcon {
+  width: 22px;
+  height: 22px;
+}
+
+.projectDetailOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30000;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(2, 8, 20, 0.7);
+  backdrop-filter: blur(8px);
+}
+
+.projectDetailModal {
+  position: relative;
+  width: min(720px, 100%);
+  max-height: min(760px, 86vh);
+  overflow: auto;
+  padding: clamp(22px, 4vw, 36px);
+  color: #edf7ff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 26px;
+  background:
+    radial-gradient(
+      circle at 85% 8%,
+      rgba(103, 232, 249, 0.18),
+      transparent 38%
+    ),
+    rgba(8, 21, 42, 0.96);
+  box-shadow: 0 32px 120px rgba(0, 0, 0, 0.55);
+}
+
+.projectDetailModal h2 {
+  margin: 0 0 14px;
+  color: #ffffff;
+  font-family: "Archivo", Arial, sans-serif;
+}
+
+.projectDetailModal p {
+  margin: 0;
+  color: #cfe5f8;
+  line-height: 1.62;
+  white-space: pre-line;
+}
+
+.projectDetailClose {
+  position: sticky;
+  top: 0;
+  float: right;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin: -10px -10px 8px 12px;
+  padding: 0;
+  color: #eaf7ff;
+  border: 1px solid rgba(103, 232, 249, 0.36);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+}
+
+.triopickProjectImage {
+  display: grid;
+  place-items: center;
+  min-height: 86px;
+  margin: -4px 0 2px;
+  overflow: hidden;
+  border-radius: 24px;
+  mask-image: radial-gradient(
+    ellipse at center,
+    #000 44%,
+    rgba(0, 0, 0, 0.74) 62%,
+    transparent 86%
+  );
+}
+
+.triopickProjectImage img {
+  display: block;
+  width: min(230px, 92%);
+  max-height: 112px;
+  object-fit: contain;
+  opacity: 0.78;
+  filter: blur(0.15px) drop-shadow(0 16px 28px rgba(77, 255, 89, 0.16));
+  pointer-events: none;
+  user-select: none;
 }
 
 .skillsShowcase,
@@ -1725,7 +1907,7 @@ svg {
   }
 
   .projectCarouselViewport {
-    min-height: 690px;
+    min-height: 820px;
   }
 
   .projectCarouselCard {
@@ -2278,71 +2460,158 @@ svg {
 .uglyCards {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 0.82fr) minmax(260px, 1.1fr) minmax(0, 0.82fr);
-  align-items: stretch;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
   gap: clamp(12px, 2.2vw, 22px);
-  min-height: 0;
+  height: 470px;
+  min-height: 470px;
+  max-height: 470px;
   margin-top: 0;
-  overflow: visible;
+  overflow: hidden;
   perspective: 900px;
 }
 
 .uglyProjectCard {
   position: relative;
+  container-type: inline-size;
   top: auto;
   left: auto;
   display: grid;
-  align-content: start;
-  gap: 12px;
+  grid-template-rows: auto minmax(0, auto) auto 1fr;
+  align-content: stretch;
+  gap: 9px;
   width: auto;
   min-width: 0;
-  min-height: 100%;
-  padding: 20px;
+  height: 410px;
+  min-height: 410px;
+  max-height: 410px;
+  overflow: hidden;
+  padding: 18px 18px 54px;
   border: 10px dashed red;
   background: yellow;
   box-shadow:
     10px 10px 0 #ff00ff,
     -8px -8px 0 #00ff00;
   transition:
-    transform 220ms ease,
-    opacity 220ms ease,
-    filter 220ms ease;
+    transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 320ms ease,
+    filter 320ms ease;
+}
+
+.uglyCards .uglyProjectCard {
+  padding: 18px 18px 54px;
+  transform: none;
 }
 
 .uglyProjectSlot-0 {
   z-index: 1;
-  transform: translateY(30px) rotate(-7deg) scale(0.92);
-  opacity: 0.76;
+  transform: none;
+  opacity: 0.34;
+  filter: saturate(0.55) contrast(0.82);
+  pointer-events: none;
 }
 
 .uglyProjectSlot-1 {
   z-index: 3;
-  transform: rotate(2deg) scale(1);
+  transform: none;
   opacity: 1;
 }
 
 .uglyProjectSlot-2 {
   z-index: 2;
-  transform: translateY(30px) rotate(7deg) scale(0.92);
-  opacity: 0.76;
+  transform: none;
+  opacity: 0.34;
+  filter: saturate(0.55) contrast(0.82);
+  pointer-events: none;
 }
 
 .uglyProjectCard h3 {
+  display: -webkit-box;
   margin: 0;
+  overflow: hidden;
   color: #0000ff;
   font-family: "Archivo", Arial, sans-serif;
-  font-size: clamp(1.65rem, 3.2vw, 3rem);
-  line-height: 0.92;
+  font-size: clamp(1.35rem, 2.6vw, 2.45rem);
+  line-height: 0.96;
   overflow-wrap: anywhere;
   text-shadow: 3px 3px #ff0000;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .uglyProjectCard p {
+  display: -webkit-box;
   margin: 0;
+  overflow: hidden;
   color: #17004a;
   font-weight: 900;
   line-height: 1.32;
   overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+}
+
+.uglyProjectDescriptionRow {
+  position: relative;
+  min-width: 0;
+}
+
+.uglyProjectDescriptionRow p {
+  min-width: 0;
+  padding-right: 16px;
+}
+
+.uglyProjectDetailsButton {
+  position: absolute;
+  right: 0;
+  bottom: 1px;
+  display: block;
+  width: 12px;
+  height: 16px;
+  padding: 0;
+  color: #0000ff;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1;
+  text-align: left;
+  text-decoration: none;
+  text-shadow: none;
+  opacity: 0.82;
+}
+
+.uglyShell .uglyProjectDetailsButton {
+  display: inline-block !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 0 0 2px !important;
+  color: #0000ff !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 0.76rem !important;
+  line-height: 1 !important;
+  text-align: left !important;
+  text-shadow: none !important;
+}
+
+.uglyShell .uglyProjectDetailsButton:hover,
+.uglyShell .uglyProjectDetailsButton:focus-visible {
+  background: transparent;
+  opacity: 1;
+}
+
+.uglyProjectCard .chips {
+  align-content: start;
+  max-height: none;
+  overflow: visible;
+  gap: 3px;
 }
 
 .uglyProjectCard .chips small,
@@ -2354,11 +2623,109 @@ svg {
   text-shadow: none;
 }
 
-.uglyProjectCard .projectLinks a {
+.uglyProjectCard .chips small {
   max-width: 100%;
+  padding: 4px 6px;
+  border-width: 2px;
+  font-size: clamp(0.56rem, 0.92vw, 0.72rem);
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.uglyProjectCard .projectLinks {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  left: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  align-self: end;
+  gap: 8px;
+  text-align: center;
+}
+
+.uglyProjectCard .projectLinks a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 46%;
+  min-height: 0;
+  margin: 0 !important;
+  padding: 4px 6px !important;
   border-radius: 0;
   background: #ff00ff;
+  font-size: clamp(0.45rem, 0.72vw, 0.58rem);
+  line-height: 1;
   overflow-wrap: anywhere;
+}
+
+.projectDetailOverlay-ugly {
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 0, 255, 0.56) 0 18px,
+      rgba(0, 255, 255, 0.56) 18px 36px
+    ),
+    rgba(0, 0, 0, 0.55);
+  backdrop-filter: none;
+}
+
+.projectDetailOverlay-ugly .projectDetailModal {
+  color: #000;
+  border: 10px dashed #ff0000;
+  border-radius: 0;
+  background: #ffff00;
+  box-shadow:
+    12px 12px 0 #ff00ff,
+    -8px -8px 0 #00ff00;
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
+  font-weight: 900;
+  transform: rotate(-1deg);
+}
+
+.projectDetailOverlay-ugly .projectDetailModal h2 {
+  color: #0000ff;
+  text-shadow: 3px 3px #ff0000;
+}
+
+.projectDetailOverlay-ugly .projectDetailModal p {
+  color: #17004a;
+}
+
+.projectDetailOverlay-ugly .projectDetailClose {
+  color: #0000ff;
+  border: 5px ridge #00ffff;
+  border-radius: 0;
+  background: #ff00ff;
+}
+
+@container (max-width: 300px) {
+  .uglyProjectCard .chips {
+    gap: 2px;
+    max-height: none;
+  }
+
+  .uglyProjectCard .chips small {
+    padding: 1px 3px;
+    border-width: 1px;
+    font-size: 0.38rem;
+  }
+}
+
+@container (max-width: 220px) {
+  .uglyProjectCard .chips {
+    gap: 2px;
+    max-height: none;
+  }
+
+  .uglyProjectCard .chips small {
+    padding: 2px 3px;
+    border-width: 1px;
+    font-size: 0.42rem;
+  }
 }
 
 .uglySkillFrame {
@@ -2472,12 +2839,16 @@ svg {
 }
 
 .uglyArrow {
-  display: grid !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
   place-items: center;
   min-width: 48px;
   min-height: 58px;
   padding: 8px !important;
   font-size: clamp(1rem, 3vw, 1.7rem);
+  line-height: 1;
+  text-align: center;
 }
 
 @keyframes panicPulse {
@@ -2545,16 +2916,16 @@ svg {
 
   .uglyCards {
     display: block;
-    min-height: 392px;
+    min-height: 436px;
     overflow: visible;
   }
 
   .uglyProjectCard {
     width: 100%;
-    height: 392px;
-    min-height: 392px;
+    height: 436px;
+    min-height: 436px;
     overflow: hidden;
-    padding: 12px;
+    padding: 12px 12px 48px;
     border-width: 8px;
     gap: 8px;
   }
@@ -2565,8 +2936,8 @@ svg {
 
   .uglyProjectSlot-1 {
     display: grid;
-    grid-template-rows: auto auto minmax(0, 1fr) auto auto;
-    transform: rotate(1.5deg);
+    grid-template-rows: auto minmax(0, auto) auto 1fr;
+    transform: none;
     animation: uglyMobileCardSwap 260ms ease both;
   }
 
@@ -2577,6 +2948,7 @@ svg {
   .uglyProjectCard h3 {
     font-size: clamp(1.2rem, 7vw, 1.9rem);
     line-height: 0.9;
+    -webkit-line-clamp: 2;
   }
 
   .uglyProjectCard p {
@@ -2585,29 +2957,44 @@ svg {
     font-size: clamp(0.72rem, 3.4vw, 0.92rem);
     line-height: 1.18;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 5;
+  }
+
+  .uglyProjectCard .chips {
+    max-height: none;
   }
 
   .uglyProjectZone .uglySectionHeader h2 {
     font-size: clamp(1.85rem, 10vw, 3.1rem);
   }
 
-  .uglyProjectCard .chips,
-  .uglyProjectCard .projectLinks {
+  .uglyProjectCard .chips {
     gap: 5px;
   }
 
-  .uglyProjectCard .chips small,
-  .uglyProjectCard .projectLinks a {
+  .uglyProjectCard .chips small {
     margin: 2px;
-    padding: 6px;
-    border-width: 3px;
-    font-size: clamp(0.62rem, 3vw, 0.78rem);
+    padding: 3px 5px;
+    border-width: 2px;
+    font-size: clamp(0.5rem, 2.4vw, 0.66rem);
     line-height: 1;
   }
 
-  .uglyProjectCard .projectIndex {
-    font-size: 0.66rem;
+  .uglyProjectCard .projectLinks {
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    gap: 6px;
+  }
+
+  .uglyProjectCard .projectLinks a {
+    align-items: center;
+    justify-content: center;
+    max-width: 46%;
+    margin: 0 !important;
+    padding: 3px 4px !important;
+    font-size: clamp(0.42rem, 1.7vw, 0.52rem);
+    text-align: center;
   }
 
   .uglySkillFrame {
@@ -2618,8 +3005,9 @@ svg {
   }
 
   .uglySkillArrow {
-    display: grid !important;
-    place-items: center;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
     min-width: 36px;
     min-height: 46px;
     margin: 0 !important;
@@ -2629,6 +3017,8 @@ svg {
     background: orange;
     font-size: 1.25rem;
     font-weight: 900;
+    line-height: 1;
+    text-align: center;
     text-shadow: 2px 2px #00ff00;
   }
 
@@ -2930,12 +3320,197 @@ svg {
   user-select: none;
 }
 
+.projectFolderGrid {
+  grid-template-columns: repeat(auto-fill, minmax(132px, 148px));
+  gap: 24px 18px;
+}
+
+.projectFolderIcon {
+  width: 132px;
+  min-height: 118px;
+}
+
+.projectFolderIcon .fileIconImage {
+  width: 92px;
+  height: 70px;
+}
+
 .fileIcon span {
   max-width: 92px;
   font-size: 0.78rem;
   line-height: 1.12;
   overflow-wrap: anywhere;
   text-shadow: none;
+}
+
+.projectFolderIcon span {
+  max-width: 128px;
+}
+
+.projectFileSurface {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 100%;
+  color: #111;
+  background: #ffffff;
+}
+
+.projectFileHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 7px;
+  border-bottom: 1px solid #9a9a9a;
+  background: #e8e8e8;
+}
+
+.projectFileHeader strong {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.9rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.projectReadmeText {
+  padding: 16px;
+  overflow: auto;
+  font-family: "Courier New", monospace;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.projectReadmeText h2 {
+  margin: 0 0 12px;
+  color: #000080;
+  font-family: "Courier New", monospace;
+  font-size: 1.1rem;
+}
+
+.projectReadmeText p {
+  margin: 0 0 14px;
+}
+
+.projectReadmeText .chips small {
+  border-radius: 0;
+  background: #e8e8e8;
+  font-family: "Courier New", monospace;
+}
+
+.projectPreviewPane {
+  display: grid;
+  place-items: center;
+  min-height: 100%;
+  padding: 12px;
+  overflow: auto;
+  background: #ffffff;
+}
+
+.projectPreviewPane img {
+  display: block;
+  max-width: 100%;
+  max-height: 520px;
+  object-fit: contain;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  background: #ffffff;
+}
+
+.triopickFolderSurface {
+  position: relative;
+  display: grid;
+  min-height: 100%;
+  padding: 18px;
+  background: #ffffff;
+}
+
+.triopickBackButton {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  width: 86px;
+  min-height: 72px;
+  padding: 5px 3px;
+  color: #111;
+  border: 1px dotted transparent;
+  background: transparent;
+  text-align: center;
+}
+
+.triopickBackButton:hover,
+.triopickBackButton:focus-visible {
+  color: #ffffff;
+  border-color: #ffffff;
+  background: #000080;
+}
+
+.triopickBackButton .uiIcon {
+  width: 38px;
+  height: 38px;
+}
+
+.triopickBackButton span {
+  max-width: 80px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1.12;
+}
+
+.triopickFolderContent {
+  place-self: center;
+  display: grid;
+  justify-items: center;
+  gap: 22px;
+  width: min(520px, calc(100% - 44px));
+  margin-top: 24px;
+  text-align: center;
+}
+
+.triopickFolderContent p {
+  margin: 0;
+  color: #1f2937;
+  font-size: clamp(0.95rem, 2.2vw, 1.12rem);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.triopickLaunchIcon {
+  display: grid;
+  justify-items: center;
+  gap: 9px;
+  width: 154px;
+  padding: 8px;
+  color: #111;
+  border: 1px dotted transparent;
+  background: transparent;
+  text-align: center;
+}
+
+.triopickLaunchIcon:hover,
+.triopickLaunchIcon:focus-visible {
+  color: #ffffff;
+  border-color: #ffffff;
+  background: #000080;
+}
+
+.triopickLaunchIcon img {
+  display: block;
+  width: 128px;
+  height: 104px;
+  object-fit: contain;
+  filter: drop-shadow(1px 2px 0 rgba(0, 0, 0, 0.25));
+  pointer-events: none;
+  user-select: none;
+}
+
+.triopickLaunchIcon span {
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1.12;
 }
 
 .cvFileSurface {
