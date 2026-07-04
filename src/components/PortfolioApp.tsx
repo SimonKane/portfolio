@@ -1550,6 +1550,14 @@ function carouselSlotClass(index: number, offset: number, total: number) {
   return slot < 3 ? `mobileSlot-${slot}` : "mobileSlotHidden";
 }
 
+function projectCarouselSlotClass(index: number, offset: number, total: number) {
+  const slot = (index - offset + total) % total;
+  if (slot === 0) return "projectSlot-1";
+  if (slot === 1) return "projectSlot-2";
+  if (slot === total - 1) return "projectSlot-0";
+  return "projectSlotHidden";
+}
+
 function BeautifyPortfolio({
   onTheme,
 }: {
@@ -1595,10 +1603,6 @@ function BeautifyPortfolio({
     },
   ];
   const hasProjectCarousel = portfolio.projects.length > 3;
-  const visibleProjects = [0, 1, 2].map(
-    (slot) =>
-      portfolio.projects[(projectOffset + slot) % portfolio.projects.length],
-  );
   const rotateProjects = (direction: -1 | 1) => {
     setProjectOffset((current) => {
       const total = portfolio.projects.length;
@@ -1619,7 +1623,7 @@ function BeautifyPortfolio({
   };
 
   const startSkillDrag = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.button !== 0) return;
+    if (event.pointerType !== "mouse" || event.button !== 0) return;
 
     skillDragRef.current = {
       pointerId: event.pointerId,
@@ -1776,11 +1780,15 @@ function BeautifyPortfolio({
                 <span aria-hidden="true">&lsaquo;</span>
               </button>
               <div className="projectCarouselViewport" aria-live="polite">
-                {visibleProjects.map((project, slotIndex) => {
+                {portfolio.projects.map((project, index) => {
                   return (
                     <article
-                      className={`projectCarouselCard projectSlot-${slotIndex}`}
-                      key={`${project.id}-${projectOffset}-${slotIndex}`}
+                      className={`projectCarouselCard ${projectCarouselSlotClass(
+                        index,
+                        projectOffset,
+                        portfolio.projects.length,
+                      )}`}
+                      key={project.id}
                     >
                       <ProjectCardContent
                         project={project}
