@@ -818,6 +818,8 @@ const TECH_ICON_SOURCES: Record<string, string> = {
   postgres: "/svg/PostgresSQL.svg",
   python: "/svg/Python.svg",
   react: "/svg/React.svg",
+  redis: "/svg/Redis.svg",
+  redux: "/svg/Redux.svg",
   rest: "/svg/OpenAPI.svg",
   "rest api development": "/svg/OpenAPI.svg",
   "tailwind css": "/svg/Tailwind-CSS.svg",

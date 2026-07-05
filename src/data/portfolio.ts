@@ -105,6 +105,7 @@ Today I build products and continuously try to expand my knowledge in AI and cyb
       name: "Frontend",
       items: [
         { name: "React", icon: "R" },
+        { name: "Redux", icon: "RX" },
         { name: "Vue.js", icon: "V" },
         { name: "HTML", icon: "H5" },
         { name: "CSS", icon: "CSS" },
@@ -131,6 +132,7 @@ Today I build products and continuously try to expand my knowledge in AI and cyb
         { name: "MySQL", icon: "SQL" },
         { name: "MongoDB", icon: "MDB" },
         { name: "Postgres", icon: "PG" },
+        { name: "Redis", icon: "RDS" },
         { name: "Supabase", icon: "SB" },
         { name: "Firebase", icon: "FB" },
         { name: "Mongoose", icon: "MG" },
