@@ -57,17 +57,17 @@ Today I build products and continuously try to expand my knowledge in AI and cyb
     {
       label: "ATS-friendly CV",
       fileName: "Simon Kaneborn - ATS CV.pdf",
-      href: "/cv/simon-kaneborn-ats-cv.pdf",
+      href: "/cv/Simon Kaneborn - ATS CV.pdf",
     },
     {
       label: "CV English",
       fileName: "Simon Kaneborn - CV-en.pdf",
-      href: "/cv/simon-kaneborn-cv-en.pdf",
+      href: "/cv/Simon Kaneborn - CV-en.pdf",
     },
     {
       label: "CV Svenska",
       fileName: "Simon Kaneborn - CV-sv.pdf",
-      href: "/cv/simon-kaneborn-cv-sv.pdf",
+      href: "/cv/Simon Kaneborn - CV-sv.pdf",
     },
   ] satisfies CvFile[],
   cv: {
@@ -258,7 +258,8 @@ The frontend is built with Next.js, React, TypeScript and Tailwind CSS. The back
     {
       id: "nextract",
       name: "Nextract",
-      tagline: "A product-feed tool for turning API data into usable storefront previews.",
+      tagline:
+        "A product-feed tool for turning API data into usable storefront previews.",
       description:
         "An early-stage showcase prototype for helping second-hand and small online merchants load API or product data, select useful fields, save cleaned feeds, choose products and preview a simple HTML storefront concept.",
       folderIcon: "/nextract-folder.png",
@@ -293,7 +294,8 @@ The backend is kept for code review and future development. It contains the orig
     {
       id: "trullo",
       name: "Trullo",
-      tagline: "A Trello-inspired Kanban board built from a simulated client brief.",
+      tagline:
+        "A Trello-inspired Kanban board built from a simulated client brief.",
       description:
         "An early school project adapted into a frontend-only portfolio showcase where users can create, edit, assign, delete, drag and reorder seeded demo tasks on a Kanban board.",
       folderIcon: "/trullo-folder.png",
