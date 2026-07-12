@@ -8,7 +8,7 @@ A complete portfolio website built as a playful retro Windows-style desktop. It 
 - React
 - TypeScript
 - Global CSS
-- No external services required at runtime
+- Optional Vercel Analytics and Microsoft Clarity tracking
 
 ## Run locally
 
@@ -19,6 +19,18 @@ npm run build
 ```
 
 Open `http://localhost:3000` after `npm run dev`.
+
+## Analytics
+
+Vercel Analytics is enabled globally through the app layout.
+
+Microsoft Clarity is also wired globally, but only loads when this environment variable is set:
+
+```bash
+NEXT_PUBLIC_CLARITY_PROJECT_ID=your-clarity-project-id
+```
+
+Add it in Vercel under Project Settings -> Environment Variables, or copy `.env.example` to `.env.local` for local testing.
 
 ## Editing portfolio content
 
