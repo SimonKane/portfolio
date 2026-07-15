@@ -4004,6 +4004,341 @@ svg {
   border-left: 0;
 }
 
+.cookieConsent {
+  position: fixed;
+  z-index: 40000;
+  display: grid;
+  gap: 8px;
+  width: min(360px, calc(100vw - 24px));
+  color: #111;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.cookieConsentTitleBar {
+  display: none;
+}
+
+.cookieConsentText {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cookieConsentText strong {
+  font-size: 0.86rem;
+  line-height: 1.1;
+}
+
+.cookieConsentText p {
+  margin: 0;
+}
+
+.cookieConsentText a {
+  justify-self: start;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cookieConsentActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.cookieConsentActions button,
+.cookieSettings {
+  min-height: 30px;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.cookieConsent-retro {
+  right: 14px;
+  bottom: 52px;
+  gap: 0;
+  padding: 3px;
+  border: 2px solid;
+  border-color: #ffffff #404040 #404040 #ffffff;
+  background: #c0c0c0;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.28);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.cookieConsent-retro .cookieConsentTitleBar {
+  display: block;
+  min-height: 22px;
+  padding: 3px 7px;
+  color: #ffffff;
+  background: linear-gradient(90deg, #000080, #1084d0);
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.15;
+  text-shadow: 1px 1px #000;
+}
+
+.cookieConsent-retro .cookieConsentText {
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 2px 9px;
+  padding: 13px 12px 8px;
+  background: #c0c0c0;
+}
+
+.cookieConsent-retro .cookieConsentText strong {
+  align-self: end;
+  color: #000080;
+  font-size: 0.82rem;
+}
+
+.cookieConsent-retro .cookieConsentText p {
+  grid-column: 2;
+  color: #111;
+  font-size: 0.78rem;
+}
+
+.cookieConsent-retro .cookieConsentText a {
+  grid-column: 2;
+  color: #000080;
+  font-size: 0.76rem;
+}
+
+.cookieConsent-retro .cookieConsentWarningIcon {
+  position: relative;
+  grid-row: 1 / span 3;
+  display: block;
+  width: 28px;
+  height: 28px;
+  margin-top: 1px;
+  background: #f7c948;
+  clip-path: polygon(50% 3%, 98% 94%, 2% 94%);
+  filter:
+    drop-shadow(1px 0 0 #7c3b00)
+    drop-shadow(-1px 0 0 #7c3b00)
+    drop-shadow(0 1px 0 #7c3b00)
+    drop-shadow(1px 1px 0 #ffffff);
+}
+
+.cookieConsent-retro .cookieConsentWarningIcon::before,
+.cookieConsent-retro .cookieConsentWarningIcon::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  background: #111;
+  transform: translateX(-50%);
+}
+
+.cookieConsent-retro .cookieConsentWarningIcon::before {
+  top: 9px;
+  width: 3px;
+  height: 9px;
+}
+
+.cookieConsent-retro .cookieConsentWarningIcon::after {
+  top: 20px;
+  width: 3px;
+  height: 3px;
+}
+
+.cookieConsent-retro .cookieConsentActions {
+  padding: 0 10px 10px;
+}
+
+.cookieConsent-retro .cookieConsentActions button,
+.cookieSettings-retro {
+  color: #111;
+  border: 2px solid;
+  border-color: #ffffff #404040 #404040 #ffffff;
+  border-radius: 0;
+  background: #c0c0c0;
+}
+
+.cookieConsent-retro .cookieConsentActions button {
+  min-width: 74px;
+  min-height: 26px;
+  padding: 3px 10px;
+}
+
+.cookieConsent-3d {
+  right: 18px;
+  bottom: 18px;
+  padding: 13px;
+  color: #eaf7ff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 18px;
+  background: rgba(8, 21, 42, 0.82);
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(18px);
+}
+
+.cookieConsent-3d .cookieConsentText p {
+  color: #bad4e8;
+}
+
+.cookieConsent-3d .cookieConsentText a {
+  color: #9befff;
+}
+
+.cookieConsent-3d .cookieConsentActions button,
+.cookieSettings-3d {
+  color: #07111f;
+  border: 0;
+  border-radius: 999px;
+  background: #ffffff;
+}
+
+.cookieConsent-3d .cookieConsentActions button:first-child {
+  color: #dcecff;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cookieConsent-ugly {
+  left: 10px;
+  bottom: 10px;
+  padding: 8px;
+  color: #000080;
+  border: 5px ridge #00ffff;
+  background: #ffff00;
+  box-shadow: 7px 7px 0 #ff00ff;
+  font-family: Arial, Helvetica, sans-serif;
+  transform: rotate(-1deg);
+}
+
+.cookieConsent-ugly .cookieConsentText p {
+  font-weight: 900;
+}
+
+.cookieConsent-ugly .cookieConsentActions button,
+.cookieSettings-ugly {
+  color: #050014;
+  border: 4px ridge #00ffff;
+  border-radius: 0;
+  background: #fff300;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.cookieSettings {
+  position: fixed;
+  z-index: 39999;
+  opacity: 0.72;
+  transition:
+    opacity var(--duration) ease,
+    transform var(--duration) ease;
+}
+
+.cookieSettings:hover,
+.cookieSettings:focus-visible {
+  opacity: 1;
+}
+
+.cookieSettings-retro {
+  right: 14px;
+  bottom: 48px;
+  padding: 4px 7px;
+}
+
+.cookieSettings-3d {
+  right: 18px;
+  bottom: 18px;
+  padding: 7px 11px;
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.24);
+}
+
+.cookieSettings-ugly {
+  left: 10px;
+  bottom: 10px;
+  padding: 6px 9px;
+  box-shadow: 4px 4px 0 #ff00ff;
+  transform: rotate(-1deg);
+}
+
+.privacyPage {
+  height: 100svh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: clamp(18px, 4vw, 46px);
+  color: #eaf7ff;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(103, 232, 249, 0.18), transparent 28%),
+    linear-gradient(135deg, #06101f, #10223a 48%, #07111f);
+}
+
+.privacyDocument {
+  display: grid;
+  gap: 22px;
+  width: min(860px, 100%);
+  margin: 0 auto;
+  padding: clamp(22px, 4vw, 42px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+  background: rgba(8, 21, 42, 0.74);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(18px);
+}
+
+.privacyBackLink,
+.privacyDocument a {
+  color: #9befff;
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.privacyBackLink {
+  justify-self: start;
+}
+
+.privacyEyebrow,
+.privacyUpdated {
+  margin: 0;
+  color: #9fc0d9;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.privacyDocument h1,
+.privacyDocument h2,
+.privacyDocument p {
+  margin: 0;
+}
+
+.privacyDocument h1 {
+  color: #ffffff;
+  font-family: "Archivo", Arial, sans-serif;
+  font-size: clamp(2.7rem, 7vw, 5.2rem);
+  line-height: 0.9;
+}
+
+.privacyDocument section {
+  display: grid;
+  gap: 10px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.privacyDocument h2 {
+  color: #ffffff;
+  font-family: "Archivo", Arial, sans-serif;
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+}
+
+.privacyDocument p,
+.privacyDocument li {
+  color: #cfe5f8;
+  line-height: 1.68;
+}
+
+.privacyDocument ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
 @media (max-width: 760px) {
   .taskbar {
     right: 0;
@@ -4015,5 +4350,33 @@ svg {
   .fileIconGrid {
     grid-template-columns: repeat(auto-fill, minmax(78px, 92px));
     gap: 14px 10px;
+  }
+
+  .cookieConsent {
+    right: 8px;
+    bottom: 50px;
+    left: 8px;
+    grid-template-columns: 1fr;
+    width: auto;
+  }
+
+  .cookieConsentActions {
+    justify-content: flex-end;
+  }
+
+  .cookieConsent-3d {
+    bottom: 10px;
+  }
+
+  .cookieConsent-ugly {
+    bottom: 96px;
+  }
+
+  .cookieSettings-retro,
+  .cookieSettings-3d,
+  .cookieSettings-ugly {
+    right: 8px;
+    bottom: 52px;
+    left: auto;
   }
 }

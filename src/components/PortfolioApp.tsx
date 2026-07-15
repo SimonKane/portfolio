@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { CookieConsent } from "@/components/CookieConsent";
 import { portfolio, type Project } from "@/data/portfolio";
 
 type ThemeMode = "retro" | "3d" | "ugly";
@@ -157,6 +158,7 @@ export function PortfolioApp() {
           onTheme={switchTheme}
         />
       )}
+      <CookieConsent variant={theme} />
     </div>
   );
 }
@@ -662,7 +664,7 @@ function AboutView() {
 
   useEffect(() => {
     if (openFile !== "about") {
-      setTypedAboutText("");
+      window.queueMicrotask(() => setTypedAboutText(""));
       return;
     }
 
@@ -671,11 +673,11 @@ function AboutView() {
     ).matches;
 
     if (prefersReducedMotion) {
-      setTypedAboutText(aboutText);
+      window.queueMicrotask(() => setTypedAboutText(aboutText));
       return;
     }
 
-    setTypedAboutText("");
+    window.queueMicrotask(() => setTypedAboutText(""));
     let index = 0;
     const typeTimer = window.setInterval(() => {
       index = Math.min(index + 8, aboutText.length);
@@ -1389,7 +1391,30 @@ function Taskbar({
             </button>
           ))}
           <hr />
-          <button onClick={() => onTheme("retro")}>Classic desktop</button>
+          <button
+            onClick={() => {
+              onTheme("retro");
+              setStartOpen(false);
+            }}
+          >
+            Classic desktop
+          </button>
+          <button
+            onClick={() => {
+              onTheme("3d");
+              setStartOpen(false);
+            }}
+          >
+            Beautify
+          </button>
+          <button
+            onClick={() => {
+              onTheme("ugly");
+              setStartOpen(false);
+            }}
+          >
+            Uglify
+          </button>
         </nav>
       )}
       <div className="taskButtons" aria-label="Open windows">
