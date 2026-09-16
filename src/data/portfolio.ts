@@ -193,6 +193,40 @@ Today I build products and continuously try to expand my knowledge in AI and cyb
   ] satisfies SkillCategory[],
   projects: [
     {
+      id: "umbrella",
+      name: "Umbrella",
+      tagline:
+        "An atmospheric, interactive landing page created for a Swedish non-profit organization.",
+      description:
+        "A cinematic, scroll-driven landing page that uses animation, 3D, canvas effects and responsive performance adaptations to tell an emotionally difficult story with a powerful but relatively simple design.",
+      folderIcon: "/umbrella-folder.png",
+      readme: `Umbrella is an interactive landing page created for a non-profit organization in Sweden. I was honored to be trusted with the opportunity to design and build an experience around an important but difficult subject.
+
+Despite the darkness of the theme, it felt meaningful to explore how an impactful yet relatively simple design could carry the story. The experience combines atmosphere, motion and carefully paced interactions to guide the visitor from tension toward hope without letting the visual effects overshadow the message.
+
+Astro provides the structure, component architecture, build process and asset handling. GSAP and ScrollTrigger coordinate the animated sequences, transitions, pinned scenes and scroll-driven timing throughout the experience. Three.js renders the cinematic 3D environment, including the street, character, rain, fog, lighting and wet surfaces, while Postprocessing adds bloom, tone mapping, vignette and film grain on supported devices.
+
+Canvas 2D powers effects such as the water-text reveal, lightning flashes, rain and umbrella splash collisions. TypeScript handles the interaction logic, animation controllers and performance adaptations, while CSS creates the responsive layouts, typography, masks, fades and atmospheric compositing. Sharp and WebP were used to optimize image assets while preserving their visual quality.
+
+The final experience was prepared for and published through Webflow.`,
+      stack: [
+        "Astro",
+        "GSAP",
+        "ScrollTrigger",
+        "Three.js",
+        "Postprocessing",
+        "Canvas 2D",
+        "TypeScript",
+        "CSS",
+        "Sharp",
+        "WebP",
+        "Webflow",
+      ],
+      screenshots: [],
+      liveUrl: "https://simonkaneumbrella.webflow.io/",
+      sourceUrl: "https://github.com/SimonKane/CodeTVchallenge",
+    },
+    {
       id: "ai-recipe-generator",
       name: "AI Recipe Generator",
       tagline: "AI-assisted recipe ideas from ingredients you already have.",

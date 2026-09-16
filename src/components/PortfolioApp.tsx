@@ -496,10 +496,7 @@ function FolderView({
             <strong>Preview.jpg - {selectedProject.name}</strong>
           </header>
           <div className="projectPreviewPane">
-            <img
-              src={previewSrc}
-              alt={`${selectedProject.name} preview`}
-            />
+            <img src={previewSrc} alt={`${selectedProject.name} preview`} />
           </div>
         </div>
       );
@@ -553,7 +550,10 @@ function FolderView({
   }
 
   return (
-    <div className="fileIconGrid projectFolderGrid" aria-label="Project folders">
+    <div
+      className="fileIconGrid projectFolderGrid"
+      aria-label="Project folders"
+    >
       {portfolio.projects.map((project) => (
         <button
           className="fileIcon projectFolderIcon"
@@ -1433,7 +1433,6 @@ const aboutDetailParagraphs = [
   "Programming started as curiosity. I wanted to understand how things worked, then how to improve them, and eventually how to build them from scratch. What began as self-learning quickly became something I couldn't stop doing. Today I've recently finished Full Stack Development at CHAS Academy while spending most of my free time building products, experimenting with AI and trying to expand my knowledge in cybersecurity.",
   "It actually started because I wanted to make a tiny browser game for my niece. No AI, no tutorials to copy, no Stack Overflow rabbit hole, just plain React, stubbornness and an unhealthy amount of trial and error. That little passion project eventually became <ellies mini game> Looking back, it might not win any awards, so be kind. But it was a project that holds a special place in my heart and a start to this journey. ",
   "I'm not particularly attached to specific frameworks or languages. Technologies change. Curiosity doesn't. I enjoy learning whatever a project requires, whether that's React, TypeScript, Node.js, cloud services or something completely new. For me it's always been more about solving problems than collecting technologies.",
-  "I also love creating products from the ground up. That's how projects like TrioPick, LogFix AI and Nextract came to life. Taking an idea from a blank page to something that people can actually use is easily my favorite part of software development.",
   "Outside of programming you'll probably find me in the gym, where I spend an unreasonable amount of time convincing myself that one more set is a good idea. Music has been a huge part of my life for years as well—I write, play and produce whenever inspiration shows up. And yes, I'm a Liverpool supporter, which has taught me resilience, patience and how to emotionally recover from a football match before Monday morning.",
   "One thing I've also accepted is that I'm absolutely terrible at naming things. Variables, projects, side projects... if you've ever wondered why half of my early repositories have questionable names, now you know. Thankfully, naming things is one of the few programming problems that Git commits let you fix later.",
   "At the end of the day, I simply enjoy building things. I like working with curious people, solving interesting problems and constantly pushing myself to become a better engineer than I was yesterday. If that sounds like the kind of person you'd enjoy working with, I'd love to have a conversation.",
@@ -1577,7 +1576,11 @@ function carouselSlotClass(index: number, offset: number, total: number) {
   return slot < 3 ? `mobileSlot-${slot}` : "mobileSlotHidden";
 }
 
-function projectCarouselSlotClass(index: number, offset: number, total: number) {
+function projectCarouselSlotClass(
+  index: number,
+  offset: number,
+  total: number,
+) {
   const slot = (index - offset + total) % total;
   if (slot === 0) return "projectSlot-1";
   if (slot === 1) return "projectSlot-2";
