@@ -195,7 +195,9 @@ function RetroDesktop({
     >
       <section className="desktopHero" aria-label="Portfolio introduction">
         <h1>{portfolio.name}</h1>
-        <p>{portfolio.title}</p>
+        <p><strong>{portfolio.title}</strong></p>
+        <p>{portfolio.tagline}</p>
+        <p>{portfolio.introduction}</p>
       </section>
 
       <div className="desktopGrid" aria-label="Desktop shortcuts">
@@ -438,11 +440,12 @@ function FolderView({
             <span>.. Projects</span>
           </button>
           <div className="triopickFolderContent">
-            <p>
-              Triopick is my private project and the company I co-founded. I
-              cannot share the source code publicly, but the product is live,
-              with an official launch coming soon. It is currently in Swedish.
-            </p>
+            <h2>{selectedProject.name}</h2>
+            <p><strong>{selectedProject.tagline}</strong></p>
+            {selectedProject.description.split("\n\n").map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+            <p>{selectedProject.stack.join(" · ")}</p>
             <a
               className="triopickLaunchIcon"
               href="https://triopick.se/"
@@ -761,19 +764,6 @@ function AboutView() {
                     <TechIcon label={skill.name} fallback={skill.icon} />
                   </span>
                   <span className="skillName">{skill.name}</span>
-                  {typeof skill.progress === "number" && (
-                    <span className="skillProgressWrap">
-                      <span className="skillProgressText">
-                        Progress {skill.progress}%
-                      </span>
-                      <span
-                        className="skillProgress"
-                        aria-label={`${skill.name} progress ${skill.progress}%`}
-                      >
-                        <span style={{ width: `${skill.progress}%` }} />
-                      </span>
-                    </span>
-                  )}
                 </div>
               ))}
             </div>
@@ -818,6 +808,7 @@ const TECH_ICON_SOURCES: Record<string, string> = {
   "openai api": "/svg/OpenAPI.svg",
   playwright: "/svg/Playwrite.svg",
   postgres: "/svg/PostgresSQL.svg",
+  postgresql: "/svg/PostgresSQL.svg",
   python: "/svg/Python.svg",
   react: "/svg/React.svg",
   redis: "/svg/Redis.svg",
@@ -1498,8 +1489,9 @@ function ProjectCardContent({
       ) : (
         <h2>{project.name}</h2>
       )}
+      {isTriopick && <p><strong>{project.tagline}</strong></p>}
       <div className="projectDescriptionRow">
-        <p>{project.description}</p>
+        <p style={isTriopick ? { whiteSpace: "pre-line" } : undefined}>{project.description}</p>
         <button
           className="projectDetailsButton"
           type="button"
@@ -1565,7 +1557,9 @@ function ProjectDetailModal({
           x
         </button>
         <h2 id={`project-detail-${project.id}`}>{project.name}</h2>
+        {project.id === "triopick" && <p><strong>{project.tagline}</strong></p>}
         <p>{project.readme || project.description}</p>
+        {project.id === "triopick" && <p>{project.stack.join(" · ")}</p>}
       </article>
     </div>
   );
@@ -1608,30 +1602,10 @@ function BeautifyPortfolio({
   const email = portfolio.contact.find((link) =>
     link.label.toLowerCase().includes("email"),
   );
-  const skillsByCategory = (categoryNames: string[]) =>
-    portfolio.skillCategories
-      .filter((category) => categoryNames.includes(category.name))
-      .flatMap((category) => category.items);
-  const skillRows = [
-    {
-      label: "Frontend and languages",
-      skills: skillsByCategory(["Languages", "Frontend"]),
-    },
-    {
-      label: "Backend",
-      skills: skillsByCategory(["Backend", "Databases", "API"]),
-    },
-    {
-      label: "Tooling, AI, methods and security",
-      skills: skillsByCategory([
-        "Testing",
-        "AI",
-        "Cloud & DevOps",
-        "Methodologies",
-        "Security",
-      ]),
-    },
-  ];
+  const skillRows = portfolio.skillCategories.map((category) => ({
+    label: category.name,
+    skills: category.items,
+  }));
   const hasProjectCarousel = portfolio.projects.length > 3;
   const rotateProjects = (direction: -1 | 1) => {
     setProjectOffset((current) => {
@@ -1724,7 +1698,9 @@ function BeautifyPortfolio({
       <section className="hero3d modernSection" aria-label="Intro">
         <div className="heroCopy">
           <h1>{portfolio.name}</h1>
-          <p>{portfolio.title}</p>
+          <p><strong>{portfolio.title}</strong></p>
+          <p>{portfolio.tagline}</p>
+          <p>{portfolio.introduction}</p>
           <div className="heroActions">
             <a href="#contact">Start a conversation</a>
             <a href="#projects">View work</a>
@@ -2011,22 +1987,9 @@ function UglyPortfolio({ onTheme }: { onTheme: (mode: ThemeMode) => void }) {
   const email = portfolio.contact.find((link) =>
     link.label.toLowerCase().includes("email"),
   );
-  const loudSkills = portfolio.skillCategories.flatMap(
-    (category) => category.items,
-  );
-  const uglySkillPageSize = 18;
-  const uglySkillPageCount = Math.max(
-    1,
-    Math.ceil(loudSkills.length / uglySkillPageSize),
-  );
-  const uglySkillPages = Array.from({ length: uglySkillPageCount }, (_, page) =>
-    Array.from({ length: uglySkillPageSize }, (_, pageSlot) => {
-      const slotIndex = page * uglySkillPageSize + pageSlot;
-      return {
-        skill: loudSkills[slotIndex % loudSkills.length],
-        slotIndex,
-      };
-    }),
+  const uglySkillPageCount = portfolio.skillCategories.length;
+  const uglySkillPages = portfolio.skillCategories.map((category) =>
+    category.items.map((skill, slotIndex) => ({ skill, slotIndex })),
   );
   const visibleProjects = [-1, 0, 1].map(
     (slot) =>
@@ -2103,7 +2066,9 @@ function UglyPortfolio({ onTheme }: { onTheme: (mode: ThemeMode) => void }) {
           <h1>
             Simon <span className="uglyBlinkName">Kane</span>
           </h1>
-          <p>{portfolio.title}</p>
+          <p><strong>{portfolio.title}</strong></p>
+          <p>{portfolio.tagline}</p>
+          <p>{portfolio.introduction}</p>
           <div className="uglyActions">
             <a href="#ugly-contact">START A CONVERSATION!!</a>
             <a href="#ugly-projects">LOOK AT WORK NOW</a>
@@ -2194,8 +2159,9 @@ function UglyPortfolio({ onTheme }: { onTheme: (mode: ThemeMode) => void }) {
                   key={`ugly-project-slot-${slotIndex}`}
                 >
                   <h3>{project.name}</h3>
+                  {project.id === "triopick" && <p><strong>{project.tagline}</strong></p>}
                   <div className="uglyProjectDescriptionRow">
-                    <p>{project.description}</p>
+                    <p style={project.id === "triopick" ? { whiteSpace: "pre-line" } : undefined}>{project.description}</p>
                     <button
                       className="uglyProjectDetailsButton"
                       type="button"
@@ -2253,22 +2219,26 @@ function UglyPortfolio({ onTheme }: { onTheme: (mode: ThemeMode) => void }) {
             &lt;
           </button>
           <div className="uglySkillWall" aria-label="Skills">
-            {loudSkills.map((skill, index) => (
-              <span
-                className="uglySkillTile"
-                key={`${skill.name}-${index}`}
-                style={
-                  {
-                    "--skill-tilt": `${(index % 5) - 2}deg`,
-                  } as React.CSSProperties
-                }
-              >
-                <TechIcon label={skill.name} fallback={skill.icon} />
-                {skill.name}
-              </span>
+            {portfolio.skillCategories.map((category) => (
+              <div className="uglySkillCategory" key={category.name}>
+                <h3>{category.name}</h3>
+                <div className="uglySkillCategoryItems">
+                  {category.items.map((skill, index) => (
+                    <span
+                      className="uglySkillTile"
+                      key={skill.name}
+                      style={{ "--skill-tilt": `${(index % 5) - 2}deg` } as React.CSSProperties}
+                    >
+                      <TechIcon label={skill.name} fallback={skill.icon} />
+                      {skill.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
           <div className="uglySkillViewport" aria-label="Skills">
+            <h3 aria-live="polite">{portfolio.skillCategories[uglySkillPage].name}</h3>
             <div
               className="uglySkillTrack"
               style={

@@ -28,11 +28,20 @@ export type CvFile = {
   href: string;
 };
 
+const triopickDescription = `Triopick is a live Swedish football prediction PWA with around 90 real users.
+
+I own the development across frontend, backend logic, APIs, data flows, deployment, maintenance and automated testing.
+
+The product integrates external football data and automates flows around matches, predictions and scoring.
+
+The source code is private, but the live product is available at triopick.se.`;
+
 export const portfolio = {
   name: "Simon Kane",
-  title: `Full-stack developer with experience in modern web applications, product development
-and problem solving. I adapt quickly to new technologies, languages and frameworks while
-deepening my knowledge in cybersecurity.`,
+  title: "Full Stack Product Engineer",
+  tagline: "I build and ship products end to end.",
+  introduction:
+    "TypeScript, React, Next.js and Node.js at the core, with growing depth in AI engineering, security, cloud and developer workflows.",
   shortBio: `Before becoming a developer I spent more than a decade working in healthcare administration. I decided to start to teach my self about programming.
 
 Today I build products and continuously try to expand my knowledge in AI and cybersecurity. I enjoy taking ideas from concept to production, especially in teams and I'm always looking for the next challenge.`,
@@ -55,19 +64,19 @@ Today I build products and continuously try to expand my knowledge in AI and cyb
   ],
   cvFiles: [
     {
-      label: "ATS-friendly CV",
-      fileName: "Simon Kaneborn - ATS CV.pdf",
-      href: "/cv/Simon Kaneborn - ATS CV.pdf",
+      label: "CV – International / ATS",
+      fileName: "Simon Kaneborn CV.pdf",
+      href: "/cv/Simon Kaneborn CV.pdf",
     },
     {
-      label: "CV English",
+      label: "CV – English",
       fileName: "Simon Kaneborn - CV-en.pdf",
       href: "/cv/Simon Kaneborn - CV-en.pdf",
     },
     {
-      label: "CV Svenska",
-      fileName: "Simon Kaneborn - CV-sv.pdf",
-      href: "/cv/Simon Kaneborn - CV-sv.pdf",
+      label: "CV – Svenska",
+      fileName: "Simon Kaneborn CV sv.pdf",
+      href: "/cv/Simon Kaneborn CV sv.pdf",
     },
   ] satisfies CvFile[],
   cv: {
@@ -81,114 +90,74 @@ Today I build products and continuously try to expand my knowledge in AI and cyb
       "Software Intern — Dolor Systems",
     ],
   },
-  skills: [
-    "TypeScript",
-    "React",
-    "Next.js",
-    "Node.js",
-    "CSS",
-    "UX systems",
-    "Testing",
-    "APIs",
-  ],
   skillCategories: [
     {
-      name: "Languages",
+      name: "Core",
       items: [
-        { name: "JavaScript", icon: "JS" },
         { name: "TypeScript", icon: "TS" },
-        { name: "Python", icon: "PY", progress: 50 },
-        { name: "C#", icon: "C#", progress: 40 },
+        { name: "JavaScript", icon: "JS" },
+        { name: "React", icon: "R" },
+        { name: "Next.js", icon: "NX" },
+        { name: "Node.js", icon: "ND" },
+        { name: "PostgreSQL", icon: "PG" },
       ],
     },
     {
       name: "Frontend",
       items: [
         { name: "React", icon: "R" },
-        { name: "Redux", icon: "RX" },
+        { name: "Next.js", icon: "NX" },
         { name: "Vue.js", icon: "V" },
-        { name: "HTML", icon: "H5" },
-        { name: "CSS", icon: "CSS" },
         { name: "Tailwind CSS", icon: "TW" },
-        { name: "Angular", icon: "A", progress: 40 },
+        { name: "MUI", icon: "MUI" },
+        { name: "Responsive UI", icon: "UI" },
+        { name: "Accessibility", icon: "A11Y" },
       ],
     },
     {
-      name: "Backend",
+      name: "Backend & Data",
       items: [
         { name: "Node.js", icon: "ND" },
         { name: "Express.js", icon: "EX" },
-        { name: "REST API Development", icon: "API" },
-        { name: "Authentication (JWT)", icon: "JWT" },
-        { name: "CRUD Operations", icon: "CRUD" },
-        { name: "API Routing", icon: "RT" },
-        { name: "Error Handling", icon: "ERR" },
-        { name: "WebSockets", icon: "WS", progress: 30 },
-      ],
-    },
-    {
-      name: "Databases",
-      items: [
-        { name: "MySQL", icon: "SQL" },
+        { name: "REST API Design", icon: "API" },
+        { name: "Authentication & Authorization", icon: "AUTH" },
+        { name: "PostgreSQL", icon: "PG" },
         { name: "MongoDB", icon: "MDB" },
-        { name: "Postgres", icon: "PG" },
-        { name: "Redis", icon: "RDS" },
-        { name: "Supabase", icon: "SB" },
-        { name: "Firebase", icon: "FB" },
-        { name: "Mongoose", icon: "MG" },
         { name: "Prisma", icon: "PR" },
+        { name: "Supabase", icon: "SB" },
+        { name: "WebSockets", icon: "WS" },
       ],
     },
     {
-      name: "API",
+      name: "Testing & Delivery",
       items: [
-        { name: "REST", icon: "REST" },
-        { name: "GraphQL", icon: "GQL" },
-      ],
-    },
-    {
-      name: "Testing",
-      items: [
-        { name: "Jest", icon: "J" },
         { name: "Playwright", icon: "PW" },
-        { name: "Cypress", icon: "CY" },
-        { name: "Vitest", icon: "VI", progress: 25 },
+        { name: "Jest", icon: "J" },
+        { name: "Docker", icon: "DK" },
+        { name: "AWS", icon: "AWS" },
+        { name: "GitHub Actions", icon: "GHA" },
+        { name: "CI/CD", icon: "CI" },
+        { name: "Vercel", icon: "VC" },
       ],
     },
     {
-      name: "AI",
+      name: "AI & Automation",
       items: [
-        { name: "AI Application Development", icon: "AI" },
-        { name: "LLM", icon: "LLM" },
+        { name: "AI Engineering", icon: "AI" },
+        { name: "LLM Integration", icon: "LLM" },
         { name: "OpenAI API", icon: "OA" },
+        { name: "Agentic Workflows", icon: "AG" },
         { name: "AI-assisted Development", icon: "AID" },
       ],
     },
     {
-      name: "Cloud & DevOps",
+      name: "Growing Specialization",
       items: [
-        { name: "AWS", icon: "AWS" },
-        { name: "Docker", icon: "DK" },
-        { name: "Git", icon: "GIT" },
-        { name: "GitHub", icon: "GH" },
-        { name: "GitHub Actions", icon: "GHA" },
-        { name: "Bash", icon: "SH" },
+        { name: "Python", icon: "PY" },
+        { name: "AI Security", icon: "AIS" },
+        { name: "Cybersecurity", icon: "SEC" },
+        { name: "C#", icon: "C#" },
       ],
-    },
-    {
-      name: "Methodologies",
-      items: [
-        { name: "Scrum", icon: "SC" },
-        { name: "TDD", icon: "TDD", progress: 70 },
-        {
-          name: "CI/CD",
-          icon: "CI",
-        },
-      ],
-    },
-    {
-      name: "Security",
-      items: [{ name: "Cybersecurity", icon: "SEC", progress: 30 }],
     },
   ] satisfies SkillCategory[],
   projects: [
@@ -260,17 +229,17 @@ The included backend explores a FastAPI structure with recipe endpoints, SQLite/
     {
       id: "ai-incident-manager",
       name: "AI Incident Manager",
-      tagline: "AI-assisted incident response dashboard for operations teams.",
+      tagline: "AI-assisted incident response platform with a safe demo environment.",
       description:
-        "A frontend-first showcase for classifying, prioritizing and resolving operational incidents with seeded demo data, AI-style recommendations, assignment flows, timelines and simulated Slack/SMS notifications.",
+        "AI Incident Manager is an AI-assisted incident response platform designed to classify, prioritize and route operational incidents through a structured workflow.",
       folderIcon: "/logfixai-folder.png",
-      readme: `AI Incident Manager is a portfolio-ready showcase of an AI-assisted incident response dashboard. It demonstrates how operational alerts can be classified, prioritized, assigned to the right owner and followed up with simulated Slack/SMS notifications.
+      readme: `AI Incident Manager is an AI-assisted incident response platform designed to classify, prioritize and route operational incidents through a structured workflow.
 
-The project started as a project/examensarbete prototype and is now prepared as a frontend-first showcase. The deployed portfolio version can run without a backend and includes seeded demo incidents, AI-style recommendations, ownership assignment, timeline views, filtering, a local technician roster, notification channel selection and automatic notification simulation.
+The system models how incoming alerts can be analysed, assigned to the right owner, escalated when needed and followed through with timeline updates and notification flows.
 
-Slack and SMS are not actually sent in showcase mode. The interface displays simulated delivery messages so the main incident response flow can be tested safely in any browser.
+The deployed version runs safely with seeded demo incidents and simulated Slack/SMS delivery, while the repository also contains the backend architecture from the original prototype, including Express routes, MongoDB/Mongoose models, AI analysis flows, Socket.IO events and notification service integrations.
 
-The frontend is built with Next.js, React, TypeScript and Tailwind CSS. The backend folder is kept as reference code for the original prototype and future expansion, with Express routes, MongoDB/Mongoose models, AI analysis flow, Socket.IO events and notification service integrations.`,
+The frontend is built with Next.js, React, TypeScript and Tailwind CSS. The project explores practical AI integration in operational systems, including incident classification, prioritization, ownership assignment, escalation and workflow automation.`,
       stack: [
         "Next.js",
         "React",
@@ -361,13 +330,11 @@ The backend and authentication-related code are still kept in the repository to 
     {
       id: "triopick",
       name: "Triopick",
-      tagline: "A private live product and company I co-founded.",
-      description:
-        "Triopick is my private project and the company I co-founded. I cannot share the source code publicly, but the product is live, with an official launch coming soon. It is currently in Swedish.",
+      tagline: "Live football prediction platform built and operated end to end.",
+      description: triopickDescription,
       folderIcon: "/triopick-folder.png",
-      readme:
-        "Triopick is my private project and the company I co-founded. I cannot share the source code publicly, but the product is live, with an official launch coming soon. It is currently in Swedish.",
-      stack: ["Private product", "Co-founder", "Live launch"],
+      readme: triopickDescription,
+      stack: ["Next.js", "TypeScript", "REST APIs", "Databases", "Playwright", "Product ownership"],
       screenshots: [],
       liveUrl: "https://triopick.se/",
       sourceUrl: "https://triopick.se/",

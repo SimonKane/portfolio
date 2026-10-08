@@ -2664,6 +2664,21 @@ svg {
 }
 
 .uglyProjectCard .chips small,
+.uglySkillCategory {
+  width: 100%;
+}
+
+.uglySkillCategory h3 {
+  text-align: center;
+}
+
+.uglySkillCategoryItems {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
 .uglySkillTile {
   color: #000;
   border: 4px double #ff0000;
